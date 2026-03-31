@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap');
+
+:root {
+  /* Kingshima Foundation - Dark-mode dominant (black aesthetic) */
+  --bg-primary: #000000;
+  --bg-secondary: #0A0A0A;
+  --surface: #111111;
+  --border: #262626;
+
+  --text-primary: #FFFFFF;
+  --text-secondary: #A1A1AA;
+  --text-muted: #71717A;
+
+  --accent-primary: #ff6d40;
+  /* Kingdom Gold */
+  --accent-secondary: #60A5FA;
+  /* Celestial Blue for secondary actions */
+  --accent-glow: rgba(255, 215, 0, 0.15);
+
+  --glass-blur: 16px;
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-bg: rgba(0, 0, 0, 0.6);
+
+  --font-heading: 'Outfit', sans-serif;
+  --font-body: 'Inter', sans-serif;
+
+  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-bounce: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+[data-theme='light'] {
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #F8FAFC;
+  --surface: #F1F5F9;
+  --border: #E2E8F0;
+
+  --text-primary: #0F172A;
+  --text-secondary: #475569;
+  --text-muted: #64748B;
+
+  --accent-primary: #B45309;
+  /* Deep Gold for light mode */
+  --accent-secondary: #2563EB;
+  --accent-glow: rgba(180, 83, 9, 0.1);
+
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(0, 0, 0, 0.05);
+}

@@ -1,0 +1,13 @@
+/* This project uses src/styles/globals.css for all design tokens and global styles. */
+/* This file intentionally left minimal to avoid conflicts. */
+
+body {
+  margin: 0;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
