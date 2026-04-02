@@ -42,11 +42,11 @@ const Contact = () => {
         <div className={styles.info}>
           <div className={styles.infoItem}>
             <h4>Foundation Hub</h4>
-            <p>12 Foundation Way<br />Digital Impact Center</p>
+            {/* <p>12 Foundation Way<br />Digital Impact Center</p> */}
           </div>
           <div className={styles.infoItem}>
             <h4>Contact Info</h4>
-            <p>impact@kingshima.foundation<br />+1 (555) KINGSHIMA</p>
+            <p>kingshima@gmail.com<br />+234 903 9556 992 KINGSHIMA</p>
           </div>
         </div>
       </div>

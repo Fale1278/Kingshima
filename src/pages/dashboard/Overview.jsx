@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   GraduationCap, 
@@ -19,7 +19,7 @@ const GrowthCard = ({ title, value, label, icon: Icon, delay, color }) => (
     className={`${styles.statCard} glass`}
   >
     <div className={styles.statHeader}>
-      <div className={styles.iconWrapper} style={{ color: color }}><Icon size={20} /></div>
+      <div className={styles.iconWrapper} style={{ color: color }}>{Icon && <Icon size={20} />}</div>
       <span className={styles.label}>{label}</span>
     </div>
     <div className={styles.statContent}>
@@ -29,8 +29,9 @@ const GrowthCard = ({ title, value, label, icon: Icon, delay, color }) => (
   </motion.div>
 );
 
-const GrowthChart = () => {
-  const data = [10, 40, 25, 70, 45, 90, 100];
+const GrowthChart = ({ data = [], months = [] }) => {
+  if (!data || data.length === 0) return <div className={styles.chartPlaceholder}>No data available</div>;
+  
   const points = data.map((d, i) => `${(i * 100) / (data.length - 1)},${100 - d}`).join(' ');
 
   return (
@@ -91,7 +92,7 @@ const GrowthChart = () => {
         ))}
       </svg>
       <div className={styles.chartLabels}>
-        {['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'].map(m => (
+        {months.map(m => (
           <span key={m}>{m}</span>
         ))}
       </div>
@@ -100,12 +101,37 @@ const GrowthChart = () => {
 };
 
 const Overview = () => {
-  const growthStats = [
-    { title: "Skills Mastered", value: "12", label: "Level 4", icon: GraduationCap, color: "var(--accent-primary)" },
-    { title: "Workshops", value: "8", label: "This Month", icon: Calendar, color: "#60A5FA" },
-    { title: "Learning Streak", value: "15 Days", label: "Keep it up!", icon: Flame, color: "#F87171" },
-    { title: "Achievements", value: "24", label: "Total Badges", icon: Award, color: "#A78BFA" },
-  ];
+  const [stats, setStats] = useState([]);
+  const [growthData, setGrowthData] = useState({ data: [], months: [] });
+  const [announcements, setAnnouncements] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const icons = [GraduationCap, Calendar, Flame, Award];
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = localStorage.getItem('auth_token');
+      const headers = { 'Authorization': `Bearer ${token}` };
+
+      try {
+        const [statsRes, growthRes, newsRes] = await Promise.all([
+          fetch('/api/dashboard/stats', { headers }),
+          fetch('/api/dashboard/growth', { headers }),
+          fetch('/api/dashboard/announcements', { headers })
+        ]);
+
+        if (statsRes.ok) setStats(await statsRes.json());
+        if (growthRes.ok) setGrowthData(await growthRes.json());
+        if (newsRes.ok) setAnnouncements(await newsRes.json());
+      } catch (err) {
+        console.error('Failed to fetch dashboard data', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <div className={styles.container}>
@@ -124,8 +150,13 @@ const Overview = () => {
       </motion.div>
 
       <div className={styles.statsGrid}>
-        {growthStats.map((stat, i) => (
-          <GrowthCard key={i} {...stat} delay={i * 0.1} />
+        {stats.map((stat, i) => (
+          <GrowthCard 
+            key={i} 
+            {...stat} 
+            icon={icons[i % icons.length]} 
+            delay={i * 0.1} 
+          />
         ))}
       </div>
 
@@ -144,7 +175,7 @@ const Overview = () => {
               </div>
               <span className={styles.panelAction}>Last 6 Months</span>
             </div>
-            <GrowthChart />
+            <GrowthChart data={growthData.data} months={growthData.months} />
           </motion.div>
 
           <motion.div 
@@ -196,12 +227,7 @@ const Overview = () => {
             <Bell size={18} className={styles.bellIcon} />
           </div>
           <div className={styles.announcementList}>
-            {[
-              { date: "Oct 12", text: "New Media Workshop starting this weekend!" },
-              { date: "Oct 10", text: "Community prayer session tomorrow at 8 PM." },
-              { date: "Oct 08", text: "October mentorship pairings are now live." },
-              { date: "Oct 05", text: "Next community impact project proposal due Friday." }
-            ].map((news, i) => (
+            {announcements.map((news, i) => (
               <div key={i} className={styles.newsItem}>
                 <span className={styles.newsDate}>{news.date}</span>
                 <p className={styles.newsText}>{news.text}</p>

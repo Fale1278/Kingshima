@@ -1,14 +1,14 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Mail, 
-  MapPin, 
-  Phone, 
-  Globe, 
-  Send, 
-  Share2, 
+import {
+  Mail,
+  MapPin,
+  Phone,
+  Globe,
+  Send,
+  Share2,
   Link,
-  MessageCircle 
+  MessageCircle
 } from 'lucide-react';
 import Section from '../../components/Section';
 import GlassCard from '../../components/GlassCard';
@@ -49,7 +49,7 @@ const AdvancedContactPage = () => {
   return (
     <div className={styles.pageWrapper}>
       <header className={styles.hero}>
-        <motion.h1 
+        <motion.h1
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8 }}
@@ -77,9 +77,9 @@ const AdvancedContactPage = () => {
 
           <div className={styles.socials}>
             {socialLinks.map((link, i) => (
-              <motion.a 
-                key={i} 
-                href={link.url} 
+              <motion.a
+                key={i}
+                href={link.url}
                 className={styles.socialIcon}
                 whileHover={{ scale: 1.1, backgroundColor: 'rgba(59, 130, 246, 0.2)' }}
                 whileTap={{ scale: 0.95 }}

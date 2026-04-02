@@ -28,7 +28,8 @@
   padding: 3rem;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 8px; /* Tighter SaaS corners */
+  border-radius: 8px;
+  /* Tighter SaaS corners */
 }
 
 .form {
@@ -51,7 +52,9 @@
   letter-spacing: 0.05em;
 }
 
-.inputGroup input, .inputGroup textarea {
+.inputGroup input,
+.inputGroup textarea,
+.select {
   background: var(--bg-primary);
   border: 1px solid var(--border);
   padding: 0.875rem 1rem;
@@ -62,7 +65,8 @@
   transition: var(--transition-smooth);
 }
 
-.inputGroup input:focus, .inputGroup textarea:focus {
+.inputGroup input:focus,
+.inputGroup textarea:focus {
   outline: none;
   border-color: var(--text-secondary);
   background: var(--surface);

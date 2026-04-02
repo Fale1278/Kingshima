@@ -8,7 +8,7 @@ const Footer = () => {
         <div className={styles.brand}>
           <div className={styles.logo}>
             <span className={styles.logoIcon}>✧</span>
-            <span className={styles.logoText}>Aetheris</span>
+            <span className={styles.logoText}>Kingshima</span>
           </div>
           <p className={styles.tagline}>Crafting the future of digital experiences with precision and vision.</p>
         </div>
@@ -40,7 +40,7 @@ const Footer = () => {
           </div>
         </div>
       </div>
-      
+
       <div className={styles.bottom}>
         <p>&copy; 2026 Aetheris Digital. All Rights Reserved.</p>
         <div className={styles.socials}>

@@ -9,49 +9,75 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate checking local storage for an existing session
-    const storedUser = localStorage.getItem('auth_user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-    setLoading(false);
+    const checkAuth = async () => {
+      const storedToken = localStorage.getItem('auth_token');
+      if (storedToken) {
+        try {
+          const res = await fetch('/api/auth/me', {
+            headers: { 'Authorization': `Bearer ${storedToken}` }
+          });
+          if (res.ok) {
+            const data = await res.json();
+            setUser(data);
+          } else {
+            localStorage.removeItem('auth_token');
+          }
+        } catch (err) {
+          console.error('Auth verification failed', err);
+        }
+      }
+      setLoading(false);
+    };
+    checkAuth();
   }, []);
 
   const login = async (email, password) => {
-    // Simulate an API call
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        if (email && password.length >= 6) {
-          const fakeUser = { id: '1', email, name: email.split('@')[0] };
-          setUser(fakeUser);
-          localStorage.setItem('auth_user', JSON.stringify(fakeUser));
-          resolve(fakeUser);
-        } else {
-          reject(new Error('Invalid email or password needs to be at least 6 characters.'));
-        }
-      }, 500);
-    });
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Login failed');
+      
+      setUser(data);
+      localStorage.setItem('auth_token', data.token);
+      return data;
+    } catch (err) {
+      if (err.name === 'TypeError') {
+        throw new Error('Unable to connect to server. Please check if the backend is running.');
+      }
+      throw err;
+    }
   };
 
   const register = async (name, email, password) => {
-    // Simulate an API call
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        if (name && email && password.length >= 6) {
-          const fakeUser = { id: '2', email, name };
-          setUser(fakeUser);
-          localStorage.setItem('auth_user', JSON.stringify(fakeUser));
-          resolve(fakeUser);
-        } else {
-          reject(new Error('Please fill in all fields correctly.'));
-        }
-      }, 500);
-    });
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password })
+      });
+      
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Registration failed');
+      
+      setUser(data);
+      localStorage.setItem('auth_token', data.token);
+      return data;
+    } catch (err) {
+      if (err.name === 'TypeError') {
+        throw new Error('Unable to connect to server. Please check if the backend is running.');
+      }
+      throw err;
+    }
   };
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('auth_user');
+    localStorage.removeItem('auth_token');
   };
 
   const value = {

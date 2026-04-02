@@ -22,11 +22,30 @@ const Register = () => {
     return null;
   }
 
+  const validateForm = () => {
+    if (!name || !email || !password) {
+      setError('Please fill in all fields');
+      return false;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError('Please enter a valid email address');
+      return false;
+    }
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters long');
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
     setError('');
 
+    if (!validateForm()) return;
+
+    setIsLoading(true);
     try {
       await register(name, email, password);
       navigate(from, { replace: true });
