@@ -31,14 +31,14 @@
 [data-theme='light'] {
   --bg-primary: #FFFFFF;
   --bg-secondary: #F8FAFC;
-  --surface: #F1F5F9;
+  --surface: #fafafa;
   --border: #E2E8F0;
 
   --text-primary: #0F172A;
   --text-secondary: #475569;
   --text-muted: #64748B;
 
-  --accent-primary: #B45309;
+  --accent-primary: #ff6d40;
   /* Deep Gold for light mode */
   --accent-secondary: #2563EB;
   --accent-glow: rgba(180, 83, 9, 0.1);
