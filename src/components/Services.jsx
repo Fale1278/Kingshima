@@ -1,9 +1,9 @@
 import React from 'react';
-import { 
-  ShieldCheck, 
-  Cpu, 
-  Palette, 
-  Users 
+import {
+  ShieldCheck,
+  Cpu,
+  Palette,
+  Users
 } from 'lucide-react';
 import Section from './Section';
 import GlassCard from './GlassCard';
@@ -11,23 +11,28 @@ import styles from './Services.module.css';
 
 const pillars = [
   {
-    title: "Spiritual Excellence",
-    description: "Rooted in faith, leading with purpose. We cultivate identity and character for lasting impact.",
+    title: "Faith & Godly Values",
+    description: "Guiding every youth with Biblical principles that shape character and purpose.",
     icon: <ShieldCheck size={32} />
   },
   {
-    title: "Digital Mastery",
-    description: "High-level technical training in Cloud, AI, and Software Engineering for the global market.",
+    title: "Technology & Innovation",
+    description: "Equipping youths with in-demand tech skills for the digital world.",
     icon: <Cpu size={32} />
   },
   {
-    title: "Creative Innovation",
-    description: "Mastering the arts of digital storytelling, media production, and futuristic design.",
+    title: "Youth Empowerment",
+    description: "Building confidence, leadership, and self-worth in every young person.",
+    icon: <ShieldCheck size={32} />
+  },
+  {
+    title: "Creativity & Expression",
+    description: "Encouraging self-discovery and creative problem-solving through design, content, and storytelling.",
     icon: <Palette size={32} />
   },
   {
-    title: "Servant Leadership",
-    description: "Mentorship and community-centered growth to transform society from the inside out.",
+    title: "Community & Collaboration",
+    description: "Fostering teamwork, mentorship, and shared growth within a supportive environment.",
     icon: <Users size={32} />
   }
 ];

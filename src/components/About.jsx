@@ -31,7 +31,10 @@ const About = () => {
         <GlassCard className={styles.card}>
           <h3 className={styles.cardTitle}>Our Vision</h3>
           <p className={styles.cardText}>
-            To become a global catalyst for youth development, setting new standards for integrity, innovation, and impact across the digital frontier.
+            To raise a generation of Godly youths who are technically empowered, purpose-
+            driven, and who — through innovation — become agents of positive change in their
+            communities and beyond.
+
           </p>
         </GlassCard>
       </div>

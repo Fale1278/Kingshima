@@ -12,7 +12,9 @@ const Hero = () => {
           Innovation
         </h1>
         <p className={styles.subtitle}>
-          The Kingshima Foundation bridges the gap between spiritual purpose and digital innovation, equipping the next generation to lead with integrity and excellence.
+          The Kingshima Foundation is a faith-driven, youth-focused initiative dedicated to
+          equipping young people with technical skills, creative tools, and Godly values to help
+          them thrive in a fast-changing world.
         </p>
 
         <div className={styles.ctaGroup}>
