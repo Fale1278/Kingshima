@@ -1,12 +1,12 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Target, 
-  Lightbulb, 
-  Compass, 
-  Users2, 
-  Globe2, 
-  ShieldCheck 
+import {
+  Target,
+  Lightbulb,
+  Compass,
+  Users2,
+  Globe2,
+  ShieldCheck
 } from 'lucide-react';
 import Section from '../../components/Section';
 import GlassCard from '../../components/GlassCard';
@@ -30,26 +30,36 @@ const ValueCard = ({ icon: Icon, title, description, delay }) => (
 const AboutPage = () => {
   const pillars = [
     {
-      icon: ShieldCheck,
-      title: "Spiritual Excellence",
-      description: "We believe that true innovation starts with a strong spiritual foundation. Our programs integrate faith-based principles with technical mastery.",
+      title: "Faith & Godly Values",
+      description: "Guiding every youth with Biblical principles that shape character and purpose.",
+      icon: ShieldCheck
     },
     {
-      icon: Lightbulb,
-      title: "Creative Innovation",
-      description: "Empowering youth to tell stories that matter. We provide the tools and mentorship to master digital arts, film, and design.",
+      title: "Technology & Innovation",
+      description: "Equipping youths with in-demand tech skills for the digital world.",
+      icon: Lightbulb
     },
     {
-      icon: Compass,
-      title: "Visionary Leadership",
-      description: "Leadership is about service. We equip the next generation with the character and skills to lead with integrity in the digital age.",
+      title: "Youth Empowerment",
+      description: "Building confidence, leadership, and self-worth in every young person.",
+      icon: Users2
     },
+    {
+      title: "Creativity & Expression",
+      description: "Encouraging self-discovery and creative problem-solving through design, content, and storytelling.",
+      icon: Target
+    },
+    {
+      title: "Community & Collaboration",
+      description: "Fostering teamwork, mentorship, and shared growth within a supportive environment.",
+      icon: Globe2
+    }
   ];
 
   return (
     <div className={styles.pageWrapper}>
       <header className={styles.hero}>
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
@@ -57,7 +67,10 @@ const AboutPage = () => {
         >
           <h1 className={styles.title}>Who <span className={styles.highlight}>We Are</span></h1>
           <p className={styles.subtitle}>
-            The Kingshima Foundation is a non-profit organization dedicated to empowering youth through technology, creativity, and faith. We serve as a bridge between potential and purpose.
+            We are a growing community of visionaries, learners, and change-makers committed
+            to raising a new generation of leaders — young people who are spiritually rooted,
+            purpose-driven, and empowered to use innovation to impact lives and shape the
+            future.
           </p>
         </motion.div>
       </header>
@@ -68,11 +81,18 @@ const AboutPage = () => {
             <h2 className={styles.sectionTitle}>Mission & Vision</h2>
             <div className={styles.statement}>
               <h3>Our Mission</h3>
-              <p>To empower the next generation of leaders through technology, creativity, and faith, bridging the gap between spiritual purpose and digital innovation.</p>
+              <p>To empower young people with technical skills, creative confidence, and Godly
+                values, equipping them to discover purpose, lead with integrity, and drive innovation
+                that transforms lives and communities.
+                We are committed to creating an environment that supports learning, growth, and
+                leadership — helping youths rise spiritually, intellectually, and socially.</p>
             </div>
             <div className={styles.statement} style={{ marginTop: '2rem' }}>
               <h3>Our Vision</h3>
-              <p>A world where every young person is equipped with the skills and spiritual foundation to lead with integrity, innovation, and impact.</p>
+              <p>To raise a generation of Godly youths who are technically empowered, purpose-
+                driven, and who — through innovation — become agents of positive change in their
+                communities and beyond.
+              </p>
             </div>
           </div>
           <div className={styles.visionStat}>

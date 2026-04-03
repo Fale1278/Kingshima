@@ -33,10 +33,10 @@ const ContactItem = ({ icon: Icon, title, content, delay }) => (
 
 const AdvancedContactPage = () => {
   const contactDetails = [
-    { icon: Mail, title: "Signal", content: "hello@aetheris.tech" },
-    { icon: Phone, title: "Comm-Link", content: "+1 (555) 000-0000" },
-    { icon: MapPin, title: "HQ", content: "Digital District 7, Silicon Valley, CA" },
-    { icon: Globe, title: "Timezone", content: "UTC-7 (Pacific Standard Time)" },
+    { icon: Mail, title: "Signal", content: "kingshima001@gmail.com" },
+    { icon: Phone, title: "Comm-Link", content: "+234 903 9556 992" },
+    { icon: MapPin, title: "HQ", content: "" },
+    { icon: Globe, title: "Timezone", content: "" },
   ];
 
   const socialLinks = [
@@ -66,7 +66,7 @@ const AdvancedContactPage = () => {
         <div className={styles.infoSection}>
           <div className={styles.sectionHeader}>
             <h2 className={styles.sectionTitle}>Global HQ</h2>
-            <p className={styles.sectionDesc}>Our operations are remote-first, with tactical hubs in major tech capitals across the globe.</p>
+            <p className={styles.sectionDesc}>Our operations are Hybrid.</p>
           </div>
 
           <div className={styles.detailsGrid}>
