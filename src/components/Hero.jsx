@@ -5,16 +5,16 @@ const Hero = () => {
   return (
     <section id="hero" className={styles.hero}>
       <div className={styles.background}></div>
-      
+
       <div className={styles.content}>
         <h1 className={styles.title}>
-          <span className={styles.highlight}>Empowering</span> Kingdom-Minded<br />
-          Innovators
+          <span className={styles.highlight}>Faith + Tech</span><br />
+          Innovation
         </h1>
         <p className={styles.subtitle}>
           The Kingshima Foundation bridges the gap between spiritual purpose and digital innovation, equipping the next generation to lead with integrity and excellence.
         </p>
-        
+
         <div className={styles.ctaGroup}>
           <button className={styles.primaryBtn}>Explore Our Mission</button>
           <button className={styles.secondaryBtn}>Join the Community</button>
