@@ -1,13 +1,28 @@
+import UserProgress from '../models/UserProgress.js';
+import Event from '../models/Event.js';
+import Program from '../models/Program.js';
+
 const getDashboardStats = async (req, res) => {
-  // In a real app, you'd fetch this from the DB based on the user
-  // For now, we'll return dynamic-ish mock data that the backend "manages"
-  const stats = [
-    { title: "Skills Mastered", value: "12", label: "Level 4", color: "var(--accent-primary)" },
-    { title: "Workshops", value: "8", label: "This Month", color: "#60A5FA" },
-    { title: "Learning Streak", value: "15 Days", label: "Keep it up!", color: "#F87171" },
-    { title: "Achievements", value: "24", label: "Total Badges", color: "#A78BFA" },
-  ];
-  res.json(stats);
+  try {
+    const completedCourses = await UserProgress.countDocuments({ 
+      user: req.user._id, 
+      isCompleted: true 
+    });
+    
+    const totalEvents = await Event.countDocuments({});
+    
+    // For now, we'll use semi-static data for streak and badges until those systems are built
+    const stats = [
+      { title: "Skills Mastered", value: completedCourses.toString(), label: "Completed", color: "var(--accent-primary)" },
+      { title: "Workshops", value: totalEvents.toString(), label: "Upcoming", color: "#60A5FA" },
+      { title: "Learning Streak", value: "15 Days", label: "Keep it up!", color: "#F87171" },
+      { title: "Achievements", value: "24", label: "Total Badges", color: "#A78BFA" },
+    ];
+    
+    res.json(stats);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
 const getGrowthData = async (req, res) => {
@@ -17,12 +32,18 @@ const getGrowthData = async (req, res) => {
 };
 
 const getAnnouncements = async (req, res) => {
-  const announcements = [
-    { date: "Oct 12", text: "New Media Workshop starting this weekend!" },
-    { date: "Oct 10", text: "Community prayer session tomorrow at 8 PM." },
-    { date: "Oct 08", text: "October mentorship pairings are now live." },
-    { date: "Oct 05", text: "Next community impact project proposal due Friday." }
-  ];
+  const events = await Event.find({}).sort('date').limit(4);
+  
+  const announcements = events.map(e => ({
+    date: e.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+    text: `${e.title} at ${e.location}`
+  }));
+
+  // If no events, show default news
+  if (announcements.length === 0) {
+    announcements.push({ date: "Now", text: "Welcome to your new dashboard! Start a program to see progress." });
+  }
+  
   res.json(announcements);
 };
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link, useLocation } from 'react-router-dom';
+import { useNavigate, Link, useLocation, Navigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import styles from './Login.module.css'; // Reusing Login styles for consistency
 
@@ -18,8 +18,7 @@ const Register = () => {
 
   // If already authenticated, redirect
   if (isAuthenticated) {
-    navigate(from, { replace: true });
-    return null;
+    return <Navigate to={from} replace />;
   }
 
   const validateForm = () => {
@@ -58,7 +57,7 @@ const Register = () => {
 
   return (
     <div className={styles.container}>
-      <div className={`${styles.authBox} glass`}>
+      <div className={`${styles.authBox} glass ${error ? styles.shake : ''}`}>
         <div className={styles.header}>
           <div className={styles.logoItem}>
             <span className={styles.logoIcon}>✧</span>

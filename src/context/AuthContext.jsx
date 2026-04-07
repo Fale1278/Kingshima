@@ -42,12 +42,13 @@ export const AuthProvider = ({ children }) => {
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Login failed');
       
-      setUser(data);
-      localStorage.setItem('auth_token', data.token);
-      return data;
+      const { token, ...userInfo } = data;
+      setUser(userInfo);
+      localStorage.setItem('auth_token', token);
+      return userInfo;
     } catch (err) {
       if (err.name === 'TypeError') {
-        throw new Error('Unable to connect to server. Please check if the backend is running.');
+        throw new Error('Backend server unreachable. Make sure the Node.js server is running on port 5000.');
       }
       throw err;
     }
@@ -64,13 +65,38 @@ export const AuthProvider = ({ children }) => {
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Registration failed');
       
-      setUser(data);
-      localStorage.setItem('auth_token', data.token);
-      return data;
+      const { token, ...userInfo } = data;
+      setUser(userInfo);
+      localStorage.setItem('auth_token', token);
+      return userInfo;
     } catch (err) {
       if (err.name === 'TypeError') {
-        throw new Error('Unable to connect to server. Please check if the backend is running.');
+        throw new Error('Backend server unreachable. Make sure the Node.js server is running on port 5000.');
       }
+      throw err;
+    }
+  };
+
+  const updateProfile = async (profileData) => {
+    try {
+      const storedToken = localStorage.getItem('auth_token');
+      const res = await fetch('/api/auth/profile', {
+        method: 'PUT',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${storedToken}`
+        },
+        body: JSON.stringify(profileData)
+      });
+      
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Failed to update profile');
+      
+      const { token, ...userInfo } = data;
+      setUser(userInfo);
+      if (token) localStorage.setItem('auth_token', token);
+      return userInfo;
+    } catch (err) {
       throw err;
     }
   };
@@ -85,6 +111,7 @@ export const AuthProvider = ({ children }) => {
     isAuthenticated: !!user,
     login,
     register,
+    updateProfile,
     logout,
     loading
   };

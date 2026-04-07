@@ -1,7 +1,10 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import styles from './Hero.module.css';
 
 const Hero = () => {
+  const navigate = useNavigate();
+
   return (
     <section id="hero" className={styles.hero}>
       <div className={styles.background}></div>
@@ -18,8 +21,8 @@ const Hero = () => {
         </p>
 
         <div className={styles.ctaGroup}>
-          <button className={styles.primaryBtn}>Explore Our Mission</button>
-          <button className={styles.secondaryBtn}>Join the Community</button>
+          <button className={styles.primaryBtn} onClick={() => navigate('/explore')}>Explore Our Mission</button>
+          <button className={styles.secondaryBtn} onClick={() => navigate('/community')}>Join the Community</button>
         </div>
       </div>
 

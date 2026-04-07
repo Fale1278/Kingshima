@@ -18,6 +18,8 @@ import PricingPage from './pages/public/Pricing';
 import AdvancedContactPage from './pages/public/Contact';
 import Login from './pages/public/Login';
 import Register from './pages/public/Register';
+import ExplorePage from './pages/public/Explore';
+import CurriculumPage from './pages/public/Curriculum';
 
 // Dashboard Pages
 import DashboardOverview from './pages/dashboard/Overview';
@@ -26,6 +28,7 @@ import CommunityPage from './pages/dashboard/Community';
 import EventsPage from './pages/dashboard/Events';
 import AchievementsPage from './pages/dashboard/Achievements';
 import ProfilePage from './pages/dashboard/Profile';
+import CoursePlayer from './pages/dashboard/CoursePlayer';
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
@@ -62,6 +65,8 @@ function App() {
               <Route path="contact" element={<AdvancedContactPage />} />
               <Route path="login" element={<Login />} />
               <Route path="register" element={<Register />} />
+              <Route path="explore" element={<ExplorePage />} />
+              <Route path="curriculum" element={<CurriculumPage />} />
             </Route>
 
             {/* Dashboard Routes */}
@@ -76,6 +81,7 @@ function App() {
               <Route path="events" element={<EventsPage />} />
               <Route path="achievements" element={<AchievementsPage />} />
               <Route path="profile" element={<ProfilePage />} />
+              <Route path="programs/:id" element={<CoursePlayer />} />
             </Route>
           </Routes>
         </Router>

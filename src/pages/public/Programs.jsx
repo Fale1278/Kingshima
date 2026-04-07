@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
   Code2, 
@@ -14,7 +15,9 @@ import Section from '../../components/Section';
 import GlassCard from '../../components/GlassCard';
 import styles from './Services.module.css'; // Reusing styles for consistency
 
-const ProgramCategory = ({ title, description, skills, icon: Icon, delay }) => (
+const ProgramCategory = ({ title, description, skills, icon: Icon, delay }) => {
+  const navigate = useNavigate();
+  return (
   <motion.div
     initial={{ opacity: 0, y: 30 }}
     whileInView={{ opacity: 1, y: 0 }}
@@ -32,10 +35,11 @@ const ProgramCategory = ({ title, description, skills, icon: Icon, delay }) => (
           <span key={i} className={styles.skillTag}>{skill}</span>
         ))}
       </div>
-      <button className={styles.learnMore}>View Curriculum</button>
+      <button className={styles.learnMore} onClick={() => navigate('/curriculum')}>View Curriculum</button>
     </GlassCard>
   </motion.div>
-);
+  );
+};
 
 const ProgramsPage = () => {
   const categories = [

@@ -20,6 +20,13 @@ const userSchema = new mongoose.Schema({
     enum: ['user', 'admin'],
     default: 'user'
   },
+  jobTitle: { type: String, default: 'Innovator' },
+  location: { type: String, default: '' },
+  website: { type: String, default: '' },
+  bio: { type: String, default: '' },
+  skills: { type: [String], default: [] },
+  goals: { type: [String], default: [] },
+  interests: { type: [String], default: [] },
 }, {
   timestamps: true
 });

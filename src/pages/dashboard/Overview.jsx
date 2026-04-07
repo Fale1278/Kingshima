@@ -9,7 +9,9 @@ import {
   Bell,
   TrendingUp
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import styles from './Overview.module.css';
+import { useAuth } from '../../context/AuthContext';
 
 const GrowthCard = ({ title, value, label, icon: Icon, delay, color }) => (
   <motion.div 
@@ -31,22 +33,13 @@ const GrowthCard = ({ title, value, label, icon: Icon, delay, color }) => (
 
 const GrowthChart = ({ data = [], months = [] }) => {
   if (!data || data.length === 0) return <div className={styles.chartPlaceholder}>No data available</div>;
-  
   const points = data.map((d, i) => `${(i * 100) / (data.length - 1)},${100 - d}`).join(' ');
-
   return (
     <div className={styles.chartWrapper}>
       <svg viewBox="0 0 100 100" preserveAspectRatio="none" className={styles.svgChart}>
-        {/* Grid Lines */}
         {[0, 25, 50, 75, 100].map(line => (
-          <line 
-            key={line} 
-            x1="0" y1={line} x2="100" y2={line} 
-            stroke="var(--border)" strokeWidth="0.5" 
-          />
+          <line key={line} x1="0" y1={line} x2="100" y2={line} stroke="var(--border)" strokeWidth="0.5" />
         ))}
-        
-        {/* Main Growth Path */}
         <motion.polyline
           fill="none"
           stroke="var(--accent-primary)"
@@ -57,8 +50,6 @@ const GrowthChart = ({ data = [], months = [] }) => {
           transition={{ duration: 2, ease: "easeInOut" }}
           style={{ filter: 'drop-shadow(0 0 5px var(--accent-glow))' }}
         />
-        
-        {/* Fill Area */}
         <motion.polyline
           fill="url(#gradient)"
           stroke="none"
@@ -67,15 +58,12 @@ const GrowthChart = ({ data = [], months = [] }) => {
           animate={{ opacity: 0.15 }}
           transition={{ delay: 1, duration: 1 }}
         />
-
         <defs>
           <linearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="100%">
             <stop offset="0%" stopColor="var(--accent-primary)" />
             <stop offset="100%" stopColor="transparent" />
           </linearGradient>
         </defs>
-
-        {/* Data Points */}
         {data.map((d, i) => (
           <motion.circle
             key={i}
@@ -91,11 +79,7 @@ const GrowthChart = ({ data = [], months = [] }) => {
           />
         ))}
       </svg>
-      <div className={styles.chartLabels}>
-        {months.map(m => (
-          <span key={m}>{m}</span>
-        ))}
-      </div>
+      <div className={styles.chartLabels}>{months.map(m => (<span key={m}>{m}</span>))}</div>
     </div>
   );
 };
@@ -104,7 +88,9 @@ const Overview = () => {
   const [stats, setStats] = useState([]);
   const [growthData, setGrowthData] = useState({ data: [], months: [] });
   const [announcements, setAnnouncements] = useState([]);
+  const [activePrograms, setActivePrograms] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { user } = useAuth();
 
   const icons = [GraduationCap, Calendar, Flame, Award];
 
@@ -114,15 +100,20 @@ const Overview = () => {
       const headers = { 'Authorization': `Bearer ${token}` };
 
       try {
-        const [statsRes, growthRes, newsRes] = await Promise.all([
+        const [statsRes, growthRes, newsRes, myProgramsRes] = await Promise.all([
           fetch('/api/dashboard/stats', { headers }),
           fetch('/api/dashboard/growth', { headers }),
-          fetch('/api/dashboard/announcements', { headers })
+          fetch('/api/dashboard/announcements', { headers }),
+          fetch('/api/programs/my-programs', { headers })
         ]);
 
         if (statsRes.ok) setStats(await statsRes.json());
         if (growthRes.ok) setGrowthData(await growthRes.json());
         if (newsRes.ok) setAnnouncements(await newsRes.json());
+        if (myProgramsRes.ok) {
+          const data = await myProgramsRes.json();
+          setActivePrograms(data.slice(0, 3));
+        }
       } catch (err) {
         console.error('Failed to fetch dashboard data', err);
       } finally {
@@ -135,39 +126,25 @@ const Overview = () => {
 
   return (
     <div className={styles.container}>
-      <motion.div 
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className={`${styles.welcomeCard} glass`}
-      >
+      <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className={`${styles.welcomeCard} glass`}>
         <div className={styles.welcomeText}>
-          <h1 className={styles.title}>Welcome Home, <span className={styles.highlight}>Innovator</span></h1>
+          <h1 className={styles.title}>Welcome Home, <span className={styles.highlight}>{user?.name?.split(' ')[0] || 'Innovator'}</span></h1>
           <p className={styles.subtitle}>
             "For I know the plans I have for you," declares the Lord. Your journey of growth and impact continues today.
           </p>
-          <button className={styles.ctaBtn}>Continue Your Path</button>
+          <Link to="/dashboard/programs" className={styles.ctaBtn}>Continue Your Path</Link>
         </div>
       </motion.div>
 
       <div className={styles.statsGrid}>
         {stats.map((stat, i) => (
-          <GrowthCard 
-            key={i} 
-            {...stat} 
-            icon={icons[i % icons.length]} 
-            delay={i * 0.1} 
-          />
+          <GrowthCard key={i} {...stat} icon={icons[i % icons.length]} delay={i * 0.1} />
         ))}
       </div>
 
       <div className={styles.mainGrid}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.4 }}
-            className={`${styles.chartPanel} glass`}
-          >
+          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.4 }} className={`${styles.chartPanel} glass`}>
             <div className={styles.panelHeader}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                 <TrendingUp size={20} className={styles.highlight} />
@@ -178,50 +155,33 @@ const Overview = () => {
             <GrowthChart data={growthData.data} months={growthData.months} />
           </motion.div>
 
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.5 }}
-            className={`${styles.chartPanel} glass`}
-          >
+          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.5 }} className={`${styles.chartPanel} glass`}>
             <div className={styles.panelHeader}>
               <h3>Active Training</h3>
-              <span className={styles.panelAction}>View All <ChevronRight size={14} /></span>
+              <Link to="/dashboard/programs" className={styles.panelAction}>View All <ChevronRight size={14} /></Link>
             </div>
             <div className={styles.courseList}>
-              {[
-                { name: "Kingdom-Minded Tech Leadership", progress: 65, instructor: "Dr. Arinze" },
-                { name: "Fullstack Cloud Engineering", progress: 40, instructor: "Engr. Sarah" },
-                { name: "Digital Storytelling & Media", progress: 85, instructor: "Direct. James" }
-              ].map((course, i) => (
+              {activePrograms.length > 0 ? activePrograms.map((entry, i) => (
                 <div key={i} className={styles.courseItem}>
                   <div className={styles.courseInfo}>
-                    <h4>{course.name}</h4>
-                    <span>Mentor: {course.instructor}</span>
+                    <h4>{entry.program.title}</h4>
+                    <span>Mentor: {entry.program.instructor}</span>
                   </div>
                   <div className={styles.courseProgress}>
                     <div className={styles.progressBar}>
-                      <motion.div 
-                        initial={{ width: 0 }}
-                        animate={{ width: `${course.progress}%` }}
-                        transition={{ delay: 0.8 + i * 0.1, duration: 1 }}
-                        className={styles.progressFill}
-                      />
+                      <motion.div initial={{ width: 0 }} animate={{ width: `${entry.progress}%` }} transition={{ delay: 0.8 + i * 0.1, duration: 1 }} className={styles.progressFill} />
                     </div>
-                    <span>{course.progress}%</span>
+                    <span>{entry.progress}%</span>
                   </div>
                 </div>
-              ))}
+              )) : (
+                <p className={styles.emptyState}>No active programs. Start one today!</p>
+              )}
             </div>
           </motion.div>
         </div>
 
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.6 }}
-          className={`${styles.recentPanel} glass`}
-        >
+        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.6 }} className={`${styles.recentPanel} glass`}>
           <div className={styles.panelHeader}>
             <h3>Announcements</h3>
             <Bell size={18} className={styles.bellIcon} />

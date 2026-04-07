@@ -38,6 +38,13 @@ const registerUser = asyncHandler(async (req, res) => {
       name: user.name,
       email: user.email,
       role: user.role,
+      jobTitle: user.jobTitle,
+      location: user.location,
+      website: user.website,
+      bio: user.bio,
+      skills: user.skills,
+      goals: user.goals,
+      interests: user.interests,
       token: generateToken(user._id)
     });
   } else {
@@ -62,6 +69,13 @@ const authUser = asyncHandler(async (req, res) => {
       name: user.name,
       email: user.email,
       role: user.role,
+      jobTitle: user.jobTitle,
+      location: user.location,
+      website: user.website,
+      bio: user.bio,
+      skills: user.skills,
+      goals: user.goals,
+      interests: user.interests,
       token: generateToken(user._id)
     });
   } else {
@@ -78,7 +92,14 @@ const getUserProfile = asyncHandler(async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
-      role: user.role
+      role: user.role,
+      jobTitle: user.jobTitle,
+      location: user.location,
+      website: user.website,
+      bio: user.bio,
+      skills: user.skills,
+      goals: user.goals,
+      interests: user.interests,
     });
   } else {
     res.status(404);
@@ -86,4 +107,43 @@ const getUserProfile = asyncHandler(async (req, res) => {
   }
 });
 
-export { registerUser, authUser, getUserProfile };
+const updateUserProfile = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+
+  if (user) {
+    user.name = req.body.name || user.name;
+    user.jobTitle = req.body.jobTitle !== undefined ? req.body.jobTitle : user.jobTitle;
+    user.location = req.body.location !== undefined ? req.body.location : user.location;
+    user.website = req.body.website !== undefined ? req.body.website : user.website;
+    user.bio = req.body.bio !== undefined ? req.body.bio : user.bio;
+    user.skills = req.body.skills || user.skills;
+    user.goals = req.body.goals || user.goals;
+    user.interests = req.body.interests || user.interests;
+
+    if (req.body.password) {
+      user.password = req.body.password;
+    }
+
+    const updatedUser = await user.save();
+
+    res.json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      role: updatedUser.role,
+      jobTitle: updatedUser.jobTitle,
+      location: updatedUser.location,
+      website: updatedUser.website,
+      bio: updatedUser.bio,
+      skills: updatedUser.skills,
+      goals: updatedUser.goals,
+      interests: updatedUser.interests,
+      token: generateToken(updatedUser._id)
+    });
+  } else {
+    res.status(404);
+    throw new Error('User not found');
+  }
+});
+
+export { registerUser, authUser, getUserProfile, updateUserProfile };

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Trophy, 
@@ -12,23 +12,61 @@ import {
 } from 'lucide-react';
 import styles from './Overview.module.css';
 
-const Badge = ({ icon: Icon, title, description, isLocked, delay }) => (
-  <motion.div
-    initial={{ opacity: 0, scale: 0.9 }}
-    animate={{ opacity: 1, scale: 1 }}
-    transition={{ delay, duration: 0.5 }}
-    className="glass"
-    style={{ padding: '1.5rem', borderRadius: '16px', border: '1px solid var(--border)', textAlign: 'center', opacity: isLocked ? 0.4 : 1, position: 'relative' }}
-  >
-    <div style={{ width: '64px', height: '64px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.25rem', color: isLocked ? 'var(--text-muted)' : 'var(--accent-primary)', boxShadow: isLocked ? 'none' : '0 0 20px var(--accent-glow)' }}>
-      {isLocked ? <Lock size={24} /> : <Icon size={32} />}
-    </div>
-    <h4 style={{ fontSize: '1rem', fontWeight: '700', marginBottom: '0.5rem', color: 'var(--text-primary)' }}>{title}</h4>
-    <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: '1.4' }}>{description}</p>
-  </motion.div>
-);
+const IconMap = {
+  Trophy,
+  Award,
+  Star,
+  Target,
+  Flame,
+  ShieldCheck,
+  Zap
+};
+
+const Badge = ({ icon, title, description, isLocked, delay }) => {
+  const IconComponent = IconMap[icon] || Award;
+  
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ delay, duration: 0.5 }}
+      className="glass"
+      style={{ padding: '1.5rem', borderRadius: '16px', border: '1px solid var(--border)', textAlign: 'center', opacity: isLocked ? 0.4 : 1, position: 'relative' }}
+    >
+      <div style={{ width: '64px', height: '64px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.25rem', color: isLocked ? 'var(--text-muted)' : 'var(--accent-primary)', boxShadow: isLocked ? 'none' : '0 0 20px var(--accent-glow)' }}>
+        {isLocked ? <Lock size={24} /> : <IconComponent size={32} />}
+      </div>
+      <h4 style={{ fontSize: '1rem', fontWeight: '700', marginBottom: '0.5rem', color: 'var(--text-primary)' }}>{title}</h4>
+      <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', lineHeight: '1.4' }}>{description}</p>
+    </motion.div>
+  );
+};
 
 const AchievementsPage = () => {
+  const [achievements, setAchievements] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAchievements = async () => {
+      const token = localStorage.getItem('auth_token');
+      try {
+        const res = await fetch('/api/achievements', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setAchievements(data);
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchAchievements();
+  }, []);
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -38,20 +76,15 @@ const AchievementsPage = () => {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '1.5rem' }}>
-        {[
-          { icon: Star, title: "Foundation Start", description: "Successfully completed orientation.", isLocked: false },
-          { icon: Trophy, title: "Skill Master", description: "Mastered your first technical skill.", isLocked: false },
-          { icon: Flame, title: "Growth Streak", description: "Learning for 15 days in a row.", isLocked: false },
-          { icon: ShieldCheck, title: "Integrity Lead", description: "Completed leadership ethics module.", isLocked: false },
-          { icon: Zap, title: "Innovator", description: "First project prototype launched.", isLocked: false },
-          { icon: Target, title: "Visionary", description: "Reach Level 5 in Kingdom Tech.", isLocked: true },
-          { icon: Award, title: "Mentor Star", description: "Successfully mentored 3 peers.", isLocked: true },
-          { icon: Award, title: "Global Impact", description: "Contribute to a community project.", isLocked: true }
-        ].map((badge, i) => (
-          <Badge key={i} {...badge} delay={i * 0.1} />
-        ))}
-      </div>
+      {isLoading ? (
+        <p>Loading your milestones...</p>
+      ) : (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '1.5rem' }}>
+          {achievements.map((badge, i) => (
+            <Badge key={badge._id} {...badge} delay={i * 0.1} />
+          ))}
+        </div>
+      )}
 
       <div className="glass" style={{ padding: '2rem', borderRadius: '16px', border: '1px solid var(--border)', marginTop: '3rem', textAlign: 'center' }}>
         <h3 style={{ fontSize: '1.5rem', fontWeight: '700', marginBottom: '0.5rem', color: 'var(--text-primary)' }}>Coming Soon: Certificates</h3>
