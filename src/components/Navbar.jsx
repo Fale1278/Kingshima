@@ -59,7 +59,7 @@ const Navbar = () => {
             {mobileMenuOpen ? '✕' : '☰'}
           </button>
 
-          <Link to="/pricing" className={`${styles.cta} ${styles.desktopOnly}`}>Plans</Link>
+          <Link to="/pricing" className={`${styles.cta} ${styles.desktopOnly}`}>Build</Link>
 
           {isAuthenticated ? (
             <Link to="/dashboard" className={`${styles.dashboardBtn} ${styles.desktopOnly}`}>Dashboard</Link>
@@ -69,7 +69,7 @@ const Navbar = () => {
 
           {/* Mobile Auth actions rendered inside the dropdown when open */}
           <div className={`${styles.mobileAuthActions} ${mobileMenuOpen ? styles.mobileAuthActionsOpen : ''}`}>
-            <Link to="/pricing" className={styles.cta}>Plans</Link>
+            <Link to="/pricing" className={styles.cta}>Build</Link>
             {isAuthenticated ? (
               <>
                 <Link to="/dashboard" className={styles.dashboardBtn}>Dashboard</Link>

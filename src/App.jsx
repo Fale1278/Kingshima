@@ -20,6 +20,8 @@ import Login from './pages/public/Login';
 import Register from './pages/public/Register';
 import ExplorePage from './pages/public/Explore';
 import CurriculumPage from './pages/public/Curriculum';
+import PrivacyPage from './pages/public/Privacy';
+import TermsPage from './pages/public/Terms';
 
 // Dashboard Pages
 import DashboardOverview from './pages/dashboard/Overview';
@@ -67,6 +69,8 @@ function App() {
               <Route path="register" element={<Register />} />
               <Route path="explore" element={<ExplorePage />} />
               <Route path="curriculum" element={<CurriculumPage />} />
+              <Route path="privacy" element={<PrivacyPage />} />
+              <Route path="terms" element={<TermsPage />} />
             </Route>
 
             {/* Dashboard Routes */}

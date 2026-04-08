@@ -11,6 +11,7 @@ import eventRoutes from './routes/eventRoutes.js';
 import communityRoutes from './routes/communityRoutes.js';
 import achievementRoutes from './routes/achievementRoutes.js';
 import mentorRoutes from './routes/mentorRoutes.js';
+import contactRoutes from './routes/contactRoutes.js';
 
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 
@@ -42,6 +43,7 @@ app.use('/api/events', eventRoutes);
 app.use('/api/community', communityRoutes);
 app.use('/api/achievements', achievementRoutes);
 app.use('/api/mentor', mentorRoutes);
+app.use('/api/contact', contactRoutes);
 
 app.get('/', (req, res) => {
   res.send('Kingshima API is running...');

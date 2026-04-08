@@ -6,10 +6,8 @@ const Hero = () => {
   const navigate = useNavigate();
 
   return (
-    <section id="hero" className={styles.hero}>
-      <div className={styles.background}></div>
-
-      <div className={styles.content}>
+    <section id="hero" className={styles.hero} style={{ position: 'relative' }}>
+      <div className={styles.content} style={{ position: 'relative', zIndex: 10 }}>
         <h1 className={styles.title}>
           <span className={styles.highlight}>Faith + Tech</span><br />
           Innovation

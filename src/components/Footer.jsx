@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import styles from './Footer.module.css';
 
 const Footer = () => {
@@ -10,39 +11,39 @@ const Footer = () => {
             <span className={styles.logoIcon}>✧</span>
             <span className={styles.logoText}>Kingshima</span>
           </div>
-          <p className={styles.tagline}>Crafting the future of digital experiences with precision and vision.</p>
+          <p className={styles.tagline}>Empowering the next generation of digital leaders and innovators.</p>
         </div>
 
         <div className={styles.linksGrid}>
           <div className={styles.linkCol}>
-            <h4>Platform</h4>
+            <h4>Foundation</h4>
             <ul>
-              <li><a href="#hero">Overview</a></li>
-              <li><a href="#services">Features</a></li>
-              <li><a href="#portfolio">Solutions</a></li>
+              <li><Link to="/about">About Us</Link></li>
+              <li><Link to="/programs">Programs</Link></li>
+              <li><Link to="/community">Community</Link></li>
             </ul>
           </div>
           <div className={styles.linkCol}>
-            <h4>Company</h4>
+            <h4>Resources</h4>
             <ul>
-              <li><a href="#about">About</a></li>
-              <li><a href="#team">Team</a></li>
-              <li><a href="#contact">Contact</a></li>
+              <li><Link to="/explore">Explore Paths</Link></li>
+              <li><Link to="/blog">Our Blog</Link></li>
+              <li><Link to="/careers">Careers</Link></li>
             </ul>
           </div>
           <div className={styles.linkCol}>
-            <h4>Legal</h4>
+            <h4>Legal & Outreach</h4>
             <ul>
-              <li><a href="#">Privacy</a></li>
-              <li><a href="#">Terms</a></li>
-              <li><a href="#">Status</a></li>
+              <li><Link to="/privacy">Privacy Policy</Link></li>
+              <li><Link to="/terms">Terms of Service</Link></li>
+              <li><Link to="/contact">Contact</Link></li>
             </ul>
           </div>
         </div>
       </div>
 
       <div className={styles.bottom}>
-        <p>&copy; 2026 Aetheris Digital. All Rights Reserved.</p>
+        <p>&copy; {new Date().getFullYear()} Kingshima Foundation. All Rights Reserved.</p>
         <div className={styles.socials}>
           <a href="#">𝕏</a>
           <a href="#">In</a>

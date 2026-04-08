@@ -6,10 +6,12 @@ import Portfolio from '../../components/Portfolio';
 import TechStack from '../../components/TechStack';
 import Team from '../../components/Team';
 import Contact from '../../components/Contact';
+import ThreeDBackground from '../../components/ThreeDBackground';
 
 const HomePage = () => {
   return (
-    <>
+    <div style={{ position: 'relative', width: '100%' }}>
+      <ThreeDBackground />
       <Hero />
       <About />
       <Services />
@@ -17,7 +19,7 @@ const HomePage = () => {
       <TechStack />
       <Team />
       <Contact />
-    </>
+    </div>
   );
 };
 

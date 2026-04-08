@@ -1,33 +1,24 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
+import { motion } from 'framer-motion';
 
 const Section = ({ children, id, className = "" }) => {
-  const [isVisible, setIsVisible] = useState(false);
-  const domRef = useRef();
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
-      });
-    });
-    
-    const { current } = domRef;
-    observer.observe(current);
-    
-    return () => observer.unobserve(current);
-  }, []);
-
   return (
-    <section
+    <motion.section
       id={id}
-      ref={domRef}
-      className={`reveal ${isVisible ? 'visible' : ''} ${className}`}
-      style={{ padding: '6rem 2rem', position: 'relative' }}
+      className={className}
+      initial={{ opacity: 0, y: 70, scale: 0.95, rotateX: 10 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ 
+        duration: 0.8, 
+        type: "spring", 
+        bounce: 0.4,
+        staggerChildren: 0.2
+      }}
+      style={{ padding: '6rem 2rem', position: 'relative', width: '100%', perspective: '1000px' }}
     >
       {children}
-    </section>
+    </motion.section>
   );
 };
 
