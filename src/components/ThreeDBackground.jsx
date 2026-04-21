@@ -14,7 +14,7 @@ const ThreeDBackground = () => {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     let animationFrameId;
-    
+
     const setSize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
@@ -25,7 +25,7 @@ const ThreeDBackground = () => {
     const particles = [];
     const numParticles = window.innerWidth > 768 ? 160 : 80;
     const fov = 280;
-    
+
     let mouse = { x: canvas.width / 2, y: canvas.height / 2 };
     let time = 0;
     const handleMouseMove = (e) => {
@@ -55,7 +55,7 @@ const ThreeDBackground = () => {
       const cy = canvas.height / 2;
       const mouseRotX = (mouse.y - cy) * 0.0001;
       const mouseRotY = (mouse.x - cx) * 0.0001;
-      
+
       const rotX = mouseRotX + Math.sin(time) * 0.2;
       const rotY = mouseRotY + Math.cos(time) * 0.2;
 
@@ -81,28 +81,28 @@ const ThreeDBackground = () => {
 
         for (let j = i + 1; j < particles.length; j++) {
           let p2 = particles[j];
-          
+
           const dx = p1.x - p2.x;
           const dy = p1.y - p2.y;
           const dz = p1.z - p2.z;
-          const dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
-          
+          const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+
           if (dist < 150) {
             const rx1 = p2.x * Math.cos(rotY) - p2.z * Math.sin(rotY);
             const rz1 = p2.z * Math.cos(rotY) + p2.x * Math.sin(rotY);
             const ry2 = p2.y * Math.cos(rotX) - rz1 * Math.sin(rotX);
             const rz2 = rz1 * Math.cos(rotX) + p2.y * Math.sin(rotX);
-            
+
             const scale2 = fov / (fov + rz2);
             const px2 = cx + rx1 * scale2;
             const py2 = cy + ry2 * scale2;
 
-            const alpha = (1 - dist / 150) * scale1 * 0.6; 
+            const alpha = (1 - dist / 150) * scale1 * 0.6;
             if (alpha > 0) {
-               ctx.strokeStyle = `rgba(139, 92, 246, ${alpha})`;
-               ctx.lineWidth = 1;
-               ctx.moveTo(px1, py1);
-               ctx.lineTo(px2, py2);
+              ctx.strokeStyle = `rgba(139, 92, 246, ${alpha})`;
+              ctx.lineWidth = 1;
+              ctx.moveTo(px1, py1);
+              ctx.lineTo(px2, py2);
             }
           }
         }
@@ -125,7 +125,7 @@ const ThreeDBackground = () => {
       window.removeEventListener('mousemove', handleMouseMove);
       cancelAnimationFrame(animationFrameId);
     };
-  }, [isLight]); 
+  }, [isLight]);
 
   // CSS injection for Light Mode animations
   useEffect(() => {
@@ -160,11 +160,11 @@ const ThreeDBackground = () => {
 
   return (
     <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', zIndex: -1, pointerEvents: 'none', overflow: 'hidden' }}>
-      
+
       {isLight ? (
         // Exceptionally beautiful minimal glass gradient effect specifically for Light Theme
         <div style={{ position: 'relative', width: '100%', height: '100%', background: '#F8F9FA' }}>
-          
+
           <div style={{
             position: 'absolute', top: '-10%', left: '-10%', width: '50vw', height: '50vw',
             background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.4) 0%, rgba(147, 197, 253, 0.1) 100%)',
@@ -185,13 +185,13 @@ const ThreeDBackground = () => {
             filter: 'blur(90px)', borderRadius: '50%',
             animation: 'float3 18s infinite ease-in-out'
           }} />
-          
+
           {/* Subtle noise/grid texture over light background */}
           <div style={{
-              position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
-              backgroundImage: 'radial-gradient(rgba(0,0,0,0.03) 1px, transparent 1px)',
-              backgroundSize: '30px 30px',
-              opacity: 0.8
+            position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
+            backgroundImage: 'radial-gradient(rgba(0,0,0,0.03) 1px, transparent 1px)',
+            backgroundSize: '30px 30px',
+            opacity: 0.8
           }} />
 
         </div>
@@ -200,9 +200,9 @@ const ThreeDBackground = () => {
         <>
           <canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} />
           <div style={{
-              position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
-              background: 'radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.8) 100%)',
-              pointerEvents: 'none'
+            position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
+            background: 'radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.8) 100%)',
+            pointerEvents: 'none'
           }} />
         </>
       )}
