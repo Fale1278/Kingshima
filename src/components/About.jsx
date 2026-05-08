@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import Section from './Section';
 import GlassCard from './GlassCard';
@@ -34,7 +36,6 @@ const About = () => {
             To raise a generation of Godly youths who are technically empowered, purpose-
             driven, and who — through innovation — become agents of positive change in their
             communities and beyond.
-
           </p>
         </GlassCard>
       </div>

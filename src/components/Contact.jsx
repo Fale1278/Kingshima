@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import Section from './Section';
 import GlassCard from './GlassCard';
@@ -21,7 +23,7 @@ const Contact = () => {
       const data = await res.json();
       
       if (res.ok) {
-        setStatus({ type: 'success', text: data.message });
+        setStatus({ type: 'success', text: 'Message received! We will get back to you soon.' });
         setFormData({ name: '', email: '', subject: 'Mentorship', message: '' });
       } else {
         setStatus({ type: 'error', text: data.message || 'Failed to connect.' });
@@ -88,11 +90,11 @@ const Contact = () => {
         <div className={styles.info}>
           <div className={styles.infoItem}>
             <h4>Foundation Hub</h4>
-            {/* <p>12 Foundation Way<br />Digital Impact Center</p> */}
+            <p>Digital Hub<br />Kingshima Center</p>
           </div>
           <div className={styles.infoItem}>
             <h4>Contact Info</h4>
-            <p>kingshima@gmail.com<br />+234 903 9556 992 KINGSHIMA</p>
+            <p>kingshima@gmail.com<br />+234 903 9556 992</p>
           </div>
         </div>
       </div>

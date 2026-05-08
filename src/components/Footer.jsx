@@ -1,5 +1,7 @@
+'use client';
+
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import styles from './Footer.module.css';
 
 const Footer = () => {
@@ -18,25 +20,25 @@ const Footer = () => {
           <div className={styles.linkCol}>
             <h4>Foundation</h4>
             <ul>
-              <li><Link to="/about">About Us</Link></li>
-              <li><Link to="/programs">Programs</Link></li>
-              <li><Link to="/community">Community</Link></li>
+              <li><Link href="/about">About Us</Link></li>
+              <li><Link href="/programs">Programs</Link></li>
+              <li><Link href="/community">Community</Link></li>
             </ul>
           </div>
           <div className={styles.linkCol}>
             <h4>Resources</h4>
             <ul>
-              <li><Link to="/explore">Explore Paths</Link></li>
-              <li><Link to="/blog">Our Blog</Link></li>
-              <li><Link to="/careers">Careers</Link></li>
+              <li><Link href="/explore">Explore Paths</Link></li>
+              <li><Link href="/blog">Our Blog</Link></li>
+              <li><Link href="/careers">Careers</Link></li>
             </ul>
           </div>
           <div className={styles.linkCol}>
             <h4>Legal & Outreach</h4>
             <ul>
-              <li><Link to="/privacy">Privacy Policy</Link></li>
-              <li><Link to="/terms">Terms of Service</Link></li>
-              <li><Link to="/contact">Contact</Link></li>
+              <li><Link href="/privacy">Privacy Policy</Link></li>
+              <li><Link href="/terms">Terms of Service</Link></li>
+              <li><Link href="/contact">Contact</Link></li>
             </ul>
           </div>
         </div>

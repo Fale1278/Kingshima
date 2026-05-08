@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useEffect, useRef } from 'react';
 import { useTheme } from '../context/ThemeContext';
 
@@ -109,7 +111,7 @@ const ThreeDBackground = () => {
 
         ctx.fillStyle = `rgba(34, 211, 238, ${scale1})`;
         ctx.beginPath();
-        ctx.arc(px1, py1, p1.radius * scale1, 0, Math.PI * 2);
+        ctx.arc(px1, py1, Math.max(0, p1.radius * scale1), 0, Math.PI * 2);
         ctx.fill();
         ctx.closePath();
       }

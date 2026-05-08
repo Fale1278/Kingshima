@@ -1,37 +1,28 @@
 @import './variables.css';
 
-*, *::before, *::after {
+* {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-}
-
-html {
-  scroll-behavior: smooth;
-  scroll-padding-top: 80px;
 }
 
 body {
   background-color: var(--bg-primary);
   color: var(--text-primary);
   font-family: var(--font-body);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  line-height: 1.6;
-  transition: background-color 0.4s ease;
+  transition: background-color 0.3s ease, color 0.3s ease;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
-  letter-spacing: -0.03em;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 a {
   text-decoration: none;
   color: inherit;
-  transition: var(--transition-smooth);
 }
 
 button {
@@ -39,64 +30,30 @@ button {
   border: none;
   background: none;
   font-family: inherit;
-  transition: var(--transition-smooth);
 }
 
-/* Glassmorphism Utility (SaaS tightened variant) */
 .glass {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 8px; /* Tighter baseline radius, 16px to 8px */
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
 }
 
-/* Animations */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+.spin {
+  animation: spin 1s linear infinite;
 }
 
-.reveal {
-  opacity: 0;
-  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-  transform: translateY(15px);
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Replaced Floating with a very subtle breath */
-@keyframes breath {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
-}
-
-.floating {
-  animation: breath 6s ease-in-out infinite;
-}
-
-/* Subtle Hover Effect instead of bright glow */
-.glow-on-hover:hover {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.15);
-}
-
-/* Custom Scrollbar - Linear style */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--border);
-  border-radius: 6px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--text-muted);
+main {
+  flex: 1;
 }

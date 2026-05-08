@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import Section from './Section';
 import styles from './Portfolio.module.css';
@@ -6,19 +8,19 @@ const trainingAreas = [
   {
     title: "Tech & Digital Excellence",
     category: "Software & Cloud",
-    image: "/kingshima_tech_training.png", // Paths will be relative to public or absolute in dev
+    image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&q=80",
     tags: ["Fullstack", "AI/ML", "Cloud"]
   },
   {
     title: "Media & Creative Arts",
     category: "Design & Film",
-    image: "/kingshima_media_creative.png",
+    image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800&q=80",
     tags: ["Cinematography", "UX/UI", "Brand"]
   },
   {
     title: "Leadership & Innovation",
     category: "Management & Faith",
-    image: "/kingshima_leadership_innovation.png",
+    image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800&q=80",
     tags: ["Strategy", "Mentorship", "Purpose"]
   }
 ];

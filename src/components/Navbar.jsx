@@ -1,15 +1,16 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useTheme } from '../context/ThemeContext';
-import { useAuth } from '../context/AuthContext';
 import styles from './Navbar.module.css';
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
-  const { isAuthenticated, logout } = useAuth();
-  const location = useLocation();
+  const pathname = usePathname();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -22,28 +23,46 @@ const Navbar = () => {
   // Close mobile menu when route changes
   useEffect(() => {
     setMobileMenuOpen(false);
-  }, [location]);
-
-  const isActive = (path) => location.pathname === path;
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'auto';
+    }
+  }, [pathname]);
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
+    document.body.style.overflow = !mobileMenuOpen ? 'hidden' : 'auto';
   };
+
+  const navLinks = [
+    { name: 'Home', path: '/' },
+    { name: 'About', path: '/about' },
+    { name: 'Team', path: '/team' },
+    { name: 'Programs', path: '/programs' },
+    { name: 'Community', path: '/community' },
+    { name: 'Blog', path: '/blog' },
+    { name: 'Contact', path: '/contact' },
+  ];
 
   return (
     <nav className={`${styles.navbar} ${scrolled ? styles.scrolled : ''} glass`}>
       <div className={styles.container}>
-        <Link to="/" className={styles.logo}>
+        <Link href="/" className={styles.logo}>
           <span className={styles.logoIcon}>✧</span>
           <span className={styles.logoText}>Kingshima</span>
         </Link>
         
-        <ul className={`${styles.links} ${mobileMenuOpen ? styles.mobileLinksOpen : ''}`}>
-          <li><Link to="/" className={isActive('/') ? styles.active : ''}>Home</Link></li>
-          <li><Link to="/about" className={isActive('/about') ? styles.active : ''}>About</Link></li>
-          <li><Link to="/programs" className={isActive('/programs') ? styles.active : ''}>Programs</Link></li>
-          <li><Link to="/community" className={isActive('/community') ? styles.active : ''}>Community</Link></li>
-          <li><Link to="/contact" className={isActive('/contact') ? styles.active : ''}>Contact</Link></li>
+        {/* Desktop Links */}
+        <ul className={`${styles.links} ${styles.desktopOnly}`}>
+          {navLinks.map((link) => (
+            <li key={link.path}>
+              <Link 
+                href={link.path} 
+                className={pathname === link.path ? styles.active : ''}
+              >
+                {link.name}
+              </Link>
+            </li>
+          ))}
         </ul>
 
         <div className={styles.actions}>
@@ -51,33 +70,41 @@ const Navbar = () => {
             {theme === 'dark' ? '☼' : '☾'}
           </button>
           
+          <Link href="/pricing" className={`${styles.cta} ${styles.desktopOnly}`}>
+            Build
+          </Link>
+
           <button 
-            className={styles.hamburger} 
+            className={`${styles.hamburger} ${mobileMenuOpen ? styles.hamburgerActive : ''}`} 
             onClick={toggleMobileMenu}
             aria-label="Toggle mobile menu"
           >
-            {mobileMenuOpen ? '✕' : '☰'}
+            <div className={styles.bar}></div>
+            <div className={styles.bar}></div>
+            <div className={styles.bar}></div>
           </button>
+        </div>
+      </div>
 
-          <Link to="/pricing" className={`${styles.cta} ${styles.desktopOnly}`}>Build</Link>
-
-          {isAuthenticated ? (
-            <Link to="/dashboard" className={`${styles.dashboardBtn} ${styles.desktopOnly}`}>Dashboard</Link>
-          ) : (
-            <Link to="/login" className={`${styles.dashboardBtn} ${styles.desktopOnly}`}>Login</Link>
-          )}
-
-          {/* Mobile Auth actions rendered inside the dropdown when open */}
-          <div className={`${styles.mobileAuthActions} ${mobileMenuOpen ? styles.mobileAuthActionsOpen : ''}`}>
-            <Link to="/pricing" className={styles.cta}>Build</Link>
-            {isAuthenticated ? (
-              <>
-                <Link to="/dashboard" className={styles.dashboardBtn}>Dashboard</Link>
-                <button onClick={logout} className={styles.logoutBtn}>Logout</button>
-              </>
-            ) : (
-              <Link to="/login" className={styles.dashboardBtn}>Login</Link>
-            )}
+      {/* Mobile Menu Overlay */}
+      <div className={`${styles.mobileMenu} ${mobileMenuOpen ? styles.mobileMenuOpen : ''}`}>
+        <div className={styles.mobileMenuContent}>
+          <ul className={styles.mobileLinks}>
+            {navLinks.map((link) => (
+              <li key={link.path}>
+                <Link 
+                  href={link.path} 
+                  className={pathname === link.path ? styles.activeMobile : ''}
+                >
+                  {link.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <div className={styles.mobileActions}>
+            <Link href="/pricing" className={styles.mobileCta}>
+              Build Your Vision
+            </Link>
           </div>
         </div>
       </div>
