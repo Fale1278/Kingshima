@@ -1,51 +1,66 @@
-'use client';
-
 import React from 'react';
-import Link from 'next/link';
-import { motion } from 'framer-motion';
-import styles from './About.module.css';
+import Section from '@/components/Section';
+import GlassCard from '@/components/GlassCard';
+import styles from './Terms.module.css';
+
+export const metadata = {
+  title: 'Terms of Service | Kingshima Foundation',
+  description: 'Read our terms of service and conditions for using our services and platform.',
+};
 
 const TermsPage = () => {
   return (
     <div className={styles.pageWrapper}>
       <header className={styles.hero}>
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className={styles.heroContent}
-        >
-          <h1 className={styles.title}>Terms of <span className={styles.highlight}>Service</span></h1>
-          <p className={styles.subtitle}>
-            Please read these terms carefully before engaging with the Kingshima Foundation ecosystem.
-          </p>
-        </motion.div>
+        <h1 className={styles.title}>Terms of <span className={styles.highlight}>Service</span></h1>
+        <p className={styles.subtitle}>Last Updated: May 2026</p>
       </header>
 
-      <section style={{ padding: '4rem 5%', maxWidth: '800px', margin: '0 auto', color: 'var(--text-secondary)', lineHeight: '1.8' }}>
-        <h2 style={{ color: 'var(--text-primary)', marginBottom: '1rem', fontSize: '1.5rem', fontWeight: '700' }}>1. Agreement to Terms</h2>
-        <p style={{ marginBottom: '2rem' }}>
-          By accessing the Kingshima Foundation platform, enrolling in courses, or joining our community, you agree to be bound by these Terms of Service. If you disagree with any part of these terms, you may not access the service.
-        </p>
+      <Section id="terms-content">
+        <GlassCard className={styles.contentCard}>
+          <div className={styles.content}>
+            <section>
+              <h2>1. Acceptance of Terms</h2>
+              <p>By accessing or using the services provided by Kingshima Foundation ("Kingshima," "we," "us," or "our"), you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our services.</p>
+            </section>
 
-        <h2 style={{ color: 'var(--text-primary)', marginBottom: '1rem', fontSize: '1.5rem', fontWeight: '700' }}>2. Intellectual Property</h2>
-        <p style={{ marginBottom: '2rem' }}>
-          All original educational content, curriculum designs, code snippets, and platform architectures provided by the Kingshima Foundation remain the intellectual property of the organization. They are designated for your personal learning and may not be redistributed.
-        </p>
+            <section>
+              <h2>2. Services Provided</h2>
+              <p>Kingshima provides technology mentorship, software engineering services, brand identity design, and community programs. We reserve the right to modify or discontinue any service at any time without notice.</p>
+            </section>
 
-        <h2 style={{ color: 'var(--text-primary)', marginBottom: '1rem', fontSize: '1.5rem', fontWeight: '700' }}>3. Code of Conduct</h2>
-        <p style={{ marginBottom: '2rem' }}>
-          We hold our community to a high standard of faith-driven ethics. Any form of harassment, unethical technical practices, or disruptive behavior in the forums or mentorship pairings will result in immediate termination of an account. 
-        </p>
+            <section>
+              <h2>3. User Obligations</h2>
+              <p>You agree to use our services for lawful purposes only and in a manner that does not infringe the rights of, or restrict the use and enjoyment of, the services by any third party.</p>
+            </section>
 
-        <h2 style={{ color: 'var(--text-primary)', marginBottom: '1rem', fontSize: '1.5rem', fontWeight: '700' }}>4. Termination</h2>
-        <p style={{ marginBottom: '2rem' }}>
-          We may terminate or suspend access to our service immediately, without prior notice or liability, for any reason whatsoever, including without limitation if you breach the Terms.
-        </p>
-        
-        <div style={{ marginTop: '3rem', padding: '1.5rem', background: 'var(--surface)', borderRadius: '12px', border: '1px solid var(--border)', textAlign: 'center' }}>
-          <p>For clarifications on any specific terms, consult our <Link href="/contact" style={{ color: 'var(--accent-primary)', textDecoration: 'underline' }}>support team</Link>.</p>
-        </div>
-      </section>
+            <section>
+              <h2>4. Intellectual Property</h2>
+              <p>All content, including but not limited to code, designs, text, and graphics provided as part of our services, is the property of Kingshima Foundation or its licensors and is protected by copyright and other intellectual property laws.</p>
+            </section>
+
+            <section>
+              <h2>5. Limitation of Liability</h2>
+              <p>Kingshima Foundation shall not be liable for any direct, indirect, incidental, or consequential damages resulting from the use or inability to use our services.</p>
+            </section>
+
+            <section>
+              <h2>6. Governing Law</h2>
+              <p>These terms are governed by and construed in accordance with the laws of the Federal Republic of Nigeria, without regard to its conflict of law principles.</p>
+            </section>
+
+            <section>
+              <h2>7. Changes to Terms</h2>
+              <p>We may update these Terms of Service from time to time. Your continued use of our services after any changes constitutes acceptance of the new terms.</p>
+            </section>
+
+            <section>
+              <h2>8. Contact Us</h2>
+              <p>If you have any questions about these Terms of Service, please contact us at <a href="mailto:legal@kingshima.com">legal@kingshima.com</a>.</p>
+            </section>
+          </div>
+        </GlassCard>
+      </Section>
     </div>
   );
 };
