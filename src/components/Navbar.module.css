@@ -53,6 +53,24 @@
   list-style: none;
 }
 
+.navItem {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.activeIndicator {
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent-primary);
+  border-radius: 2px;
+  box-shadow: 0 0 10px rgba(255, 109, 64, 0.5);
+}
+
 .links a {
   font-weight: 500;
   font-size: 0.9rem;

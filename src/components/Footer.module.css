@@ -93,7 +93,7 @@
 }
 
 .socials a:hover {
-  color: var(--text-primary);
+  color: var(--accent-primary);
   transform: translateY(-3px);
 }
 

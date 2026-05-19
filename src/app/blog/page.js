@@ -7,7 +7,8 @@ import {
   ArrowRight, 
   Calendar, 
   Clock, 
-  TrendingUp 
+  TrendingUp,
+  Rss
 } from 'lucide-react';
 import Section from '@/components/Section';
 import GlassCard from '@/components/GlassCard';
@@ -52,10 +53,30 @@ const BlogPage = () => {
   return (
     <div className={styles.pageWrapper}>
       <header className={styles.hero}>
-        <h1 className={styles.title}>Digital <span className={styles.highlight}>Insights</span></h1>
-        <p className={styles.subtitle}>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6 }}
+          className={styles.heroBadge}
+        >
+          <Rss size={16} /> From the Blog
+        </motion.div>
+        <motion.h1
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.1 }}
+          className={styles.title}
+        >
+          Digital <span className={styles.highlight}>Insights</span>
+        </motion.h1>
+        <motion.p
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className={styles.subtitle}
+        >
           Deep dives into engineering, design philosophy, and the future of technology from the Kingshima team.
-        </p>
+        </motion.p>
       </header>
 
       <div className={styles.featuredSection}>

@@ -57,22 +57,35 @@ const CareersPage = () => {
   return (
     <div className={styles.pageWrapper}>
       <header className={styles.hero}>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6 }}
+          className={styles.heroBadge}
+        >
+          <Briefcase size={16} /> Careers
+        </motion.div>
         <motion.h1 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.8, delay: 0.1 }}
           className={styles.title}
         >
           Build the <span className={styles.highlight}>Untethered</span> Future
         </motion.h1>
-        <p className={styles.subtitle}>
-          We are looking for the outliers, the polymaths, and the dreamers who believe technology is a tool for human empowerment.
-        </p>
+        <motion.p
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className={styles.subtitle}
+        >
+          We are looking for the outliers, the polymaths, and the dreamers who believe technology is a tool for human empowerment at Kingshima.
+        </motion.p>
       </header>
 
       <Section id="perks" className={styles.perksSection}>
         <div className={styles.sectionHeader}>
-          <h2 className={styles.sectionTitle}>Why Aetheris?</h2>
+          <h2 className={styles.sectionTitle}>Why Kingshima?</h2>
         </div>
         <div className={styles.perksGrid}>
           {perks.map((perk, i) => (

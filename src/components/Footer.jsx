@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { Twitter, Linkedin, Github } from 'lucide-react';
 import styles from './Footer.module.css';
 
 const Footer = () => {
@@ -47,9 +48,9 @@ const Footer = () => {
       <div className={styles.bottom}>
         <p>&copy; {new Date().getFullYear()} Kingshima Foundation. All Rights Reserved.</p>
         <div className={styles.socials}>
-          <a href="#">𝕏</a>
-          <a href="#">In</a>
-          <a href="#">Gh</a>
+          <a href="#" aria-label="Twitter"><Twitter size={18} /></a>
+          <a href="#" aria-label="LinkedIn"><Linkedin size={18} /></a>
+          <a href="#" aria-label="GitHub"><Github size={18} /></a>
         </div>
       </div>
     </footer>

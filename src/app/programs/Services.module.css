@@ -1,59 +1,80 @@
+/* ─── Page Shell ─── */
 .pageWrapper {
-  padding-top: 120px;
+  padding-top: 140px;
   max-width: 1200px;
   margin: 0 auto;
+  min-height: 100vh;
 }
 
+/* ─── Hero ─── */
 .hero {
   text-align: center;
   margin-bottom: 6rem;
-  padding: 0 1rem;
+  padding: 0 1.5rem;
+}
+
+.heroBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 109, 64, 0.1);
+  color: var(--accent-primary);
+  padding: 0.5rem 1.2rem;
+  border-radius: 30px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(255, 109, 64, 0.2);
 }
 
 .pageTitle {
-  font-size: clamp(3rem, 6vw, 5rem);
-  font-weight: 700;
+  font-size: clamp(3rem, 7vw, 5rem);
+  font-weight: 800;
   margin-bottom: 1.5rem;
   letter-spacing: -0.04em;
   color: var(--text-primary);
 }
 
 .highlight {
-  color: var(--text-secondary);
+  color: var(--accent-primary);
 }
 
 .heroSubtitle {
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   color: var(--text-secondary);
-  max-width: 650px;
+  max-width: 680px;
   margin: 0 auto;
-  line-height: 1.6;
+  line-height: 1.7;
 }
 
+/* ─── Program Cards Grid ─── */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 1.5rem;
   margin-bottom: 8rem;
+  padding: 0 1.5rem;
 }
 
 .serviceCard {
   padding: 2.5rem;
   height: 100%;
-  border-radius: 8px;
+  border-radius: 16px;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
   background: var(--surface);
   border: 1px solid var(--border);
-  transition: transform 0.2s ease, border-color 0.2s ease;
+  transition: var(--transition-smooth);
 }
 
 .serviceCard:hover {
-  transform: translateY(-2px);
-  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-4px);
+  border-color: var(--accent-primary);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 109, 64, 0.15);
 }
 
+/* ─── Card Header ─── */
 .cardHeader {
   display: flex;
   align-items: center;
@@ -63,56 +84,74 @@
 .iconWrapper {
   width: 48px;
   height: 48px;
-  background: var(--bg-primary);
-  border: 1px solid var(--border);
-  border-radius: 8px;
+  background: rgba(255, 109, 64, 0.1);
+  border: 1px solid rgba(255, 109, 64, 0.2);
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--text-primary);
+  color: var(--accent-primary);
+  flex-shrink: 0;
+  transition: var(--transition-smooth);
+}
+
+.serviceCard:hover .iconWrapper {
+  background: var(--accent-primary);
+  color: white;
+  border-color: var(--accent-primary);
 }
 
 .cardTitle {
-  font-size: 1.5rem;
-  font-weight: 600;
-  letter-spacing: -0.01em;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
 }
 
 .cardDescription {
   color: var(--text-secondary);
-  line-height: 1.6;
-  font-size: 1rem;
+  line-height: 1.7;
+  font-size: 0.95rem;
+  flex: 1;
 }
 
-.featureList {
-  list-style: none;
-  font-size: 0.9rem;
-  color: var(--text-muted);
+/* ─── Skill Tags ─── */
+.skillTags {
   display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+  flex-wrap: wrap;
+  gap: 0.6rem;
 }
 
-.featureList li {
-  display: flex;
+.skillTag {
+  display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.4rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  transition: var(--transition-smooth);
 }
 
-.zap {
+.serviceCard:hover .skillTag {
+  border-color: rgba(255, 109, 64, 0.3);
   color: var(--text-primary);
 }
 
+/* ─── Learn More Button ─── */
 .learnMore {
   margin-top: auto;
   background: transparent;
   border: 1px solid var(--border);
   color: var(--text-primary);
-  padding: 0.75rem 1.5rem;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  display: flex;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
@@ -120,107 +159,202 @@
 }
 
 .learnMore:hover {
-  background: var(--surface);
-  border-color: var(--text-secondary);
+  background: var(--accent-primary);
+  border-color: var(--accent-primary);
+  color: white;
+  transform: translateX(2px);
 }
 
+/* ─── Methodology Section ─── */
 .methodology {
+  background: var(--surface);
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
   margin-bottom: 8rem;
   padding: 6rem 2rem;
+}
+
+.methContent {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.methHeader {
   text-align: center;
-  background: var(--surface);
+  margin-bottom: 4rem;
 }
 
 .methTitle {
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 3rem;
-  letter-spacing: -0.02em;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin-bottom: 1rem;
+}
+
+.methSubtitle {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  max-width: 550px;
+  margin: 0 auto;
+  line-height: 1.6;
 }
 
 .methGrid {
-  display: flex;
-  justify-content: center;
-  gap: 4rem;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 2rem;
 }
 
 .methItem {
-  max-width: 280px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 2rem;
+  text-align: center;
+  transition: var(--transition-smooth);
+}
+
+.methItem:hover {
+  border-color: var(--accent-primary);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.15);
 }
 
 .methIcon {
   width: 56px;
   height: 56px;
-  background: var(--bg-primary);
-  border: 1px solid var(--border);
-  border-radius: 8px;
+  background: rgba(255, 109, 64, 0.1);
+  border: 1px solid rgba(255, 109, 64, 0.2);
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto 1.5rem;
-  color: var(--text-primary);
+  color: var(--accent-primary);
+  transition: var(--transition-smooth);
+}
+
+.methItem:hover .methIcon {
+  background: var(--accent-primary);
+  color: white;
+  border-color: var(--accent-primary);
 }
 
 .methItem h4 {
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-size: 1.1rem;
+  font-weight: 700;
   margin-bottom: 0.75rem;
+  color: var(--text-primary);
 }
 
 .methItem p {
   color: var(--text-muted);
-  font-size: 0.95rem;
-  line-height: 1.6;
+  font-size: 0.9rem;
+  line-height: 1.65;
 }
 
+/* ─── CTA Section ─── */
 .ctaSection {
-  padding: 0 1rem;
+  padding: 0 1.5rem;
   margin-bottom: 8rem;
 }
 
 .ctaBox {
-  padding: 4rem;
+  border-radius: 20px;
+  padding: 5rem 2rem;
   text-align: center;
-  border-radius: 8px;
   background: var(--surface);
   border: 1px solid var(--border);
   max-width: 900px;
   margin: 0 auto;
+  transition: var(--transition-smooth);
+}
+
+.ctaBox:hover {
+  border-color: rgba(255, 109, 64, 0.3);
+  box-shadow: 0 0 60px rgba(255, 109, 64, 0.06);
+}
+
+.ctaIcon {
+  color: var(--accent-primary);
+  margin-bottom: 2rem;
 }
 
 .ctaBox h2 {
-  font-size: 2.5rem;
-  font-weight: 700;
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  font-weight: 800;
   margin-bottom: 1rem;
   letter-spacing: -0.02em;
 }
 
 .ctaBox p {
   color: var(--text-secondary);
-  font-size: 1.125rem;
+  font-size: 1.1rem;
   margin-bottom: 2.5rem;
+  max-width: 520px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
 }
 
 .ctaBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   background: var(--text-primary);
   color: var(--bg-primary);
-  padding: 0.875rem 2.5rem;
-  border-radius: 6px;
+  padding: 1rem 2.5rem;
+  border-radius: 8px;
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 700;
   transition: var(--transition-smooth);
 }
 
 .ctaBtn:hover {
-  background: var(--text-secondary);
-  transform: translateY(-1px);
+  background: var(--accent-primary);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(255, 109, 64, 0.3);
 }
 
+/* ─── Responsive ─── */
 @media (max-width: 768px) {
+  .pageWrapper {
+    padding-top: 120px;
+  }
+
+  .hero {
+    margin-bottom: 4rem;
+  }
+
+  .grid {
+    padding: 0 1rem;
+    gap: 1rem;
+    margin-bottom: 5rem;
+  }
+
   .methGrid {
-    gap: 3rem;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .methodology {
+    padding: 4rem 1.25rem;
+    margin-bottom: 5rem;
+  }
+
+  .ctaBox {
+    padding: 3rem 1.5rem;
+  }
+
+  .ctaSection {
+    margin-bottom: 5rem;
+    padding: 0 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .methGrid {
+    grid-template-columns: 1fr;
   }
 }

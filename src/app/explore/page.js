@@ -3,7 +3,7 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Heart, Zap, Globe, Rocket } from 'lucide-react';
+import { Heart, Zap, Globe, Rocket, Sparkles } from 'lucide-react';
 import Section from '@/components/Section';
 import GlassCard from '@/components/GlassCard';
 import styles from './Explore.module.css';
@@ -55,9 +55,17 @@ const ExplorePage = () => {
     <div className={styles.pageWrapper}>
       <header className={styles.hero}>
         <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6 }}
+          className={styles.heroBadge}
+        >
+          <Sparkles size={16} /> Our Mission
+        </motion.div>
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.8, delay: 0.1 }}
         >
           <h1 className={styles.title}>
             Our <span className={styles.highlight}>Mission</span>

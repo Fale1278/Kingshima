@@ -1,0 +1,374 @@
+/* ─── Page Shell ─── */
+.pageWrapper {
+  padding-top: 140px;
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+/* ─── Hero ─── */
+.hero {
+  text-align: center;
+  margin-bottom: 8rem;
+  padding: 0 1.5rem;
+}
+
+.heroBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 109, 64, 0.1);
+  color: var(--accent-primary);
+  padding: 0.5rem 1.2rem;
+  border-radius: 30px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(255, 109, 64, 0.2);
+}
+
+.title {
+  font-size: clamp(2.5rem, 8vw, 5rem);
+  font-weight: 800;
+  margin-bottom: 2rem;
+  letter-spacing: -2.5px;
+}
+
+.highlight {
+  color: var(--accent-primary);
+}
+
+.subtitle {
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  max-width: 800px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* ─── Section header ─── */
+.sectionHeader {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.sectionTitle {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+}
+
+.sectionSubtitle {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* ─── Impact / Value Cards ─── */
+.valuesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 8rem;
+}
+
+.valueCard {
+  padding: 3rem !important;
+  text-align: center;
+  height: 100%;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  transition: var(--transition-smooth);
+}
+
+.valueCard:hover {
+  border-color: var(--accent-primary);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.valueIcon {
+  width: 60px;
+  height: 60px;
+  background: rgba(255, 109, 64, 0.08);
+  border: 1px solid rgba(255, 109, 64, 0.15);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 2rem;
+  color: var(--accent-primary);
+  transition: var(--transition-smooth);
+}
+
+.valueCard:hover .valueIcon {
+  background: var(--accent-primary);
+  color: white;
+  border-color: var(--accent-primary);
+}
+
+.valueTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.valueText {
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* ─── Mentorship CTA Card ─── */
+.teamVibe {
+  padding: 0 1.5rem;
+  margin-bottom: 8rem;
+}
+
+.vibeCard {
+  padding: 5rem 3rem;
+  text-align: center;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  transition: var(--transition-smooth);
+}
+
+.vibeCard:hover {
+  border-color: rgba(255, 109, 64, 0.3);
+}
+
+.vibeTitle {
+  font-size: 2.75rem;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+}
+
+.vibeText {
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  max-width: 700px;
+  margin: 0 auto 2.5rem;
+  line-height: 1.7;
+}
+
+.vibeIcons {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  color: var(--accent-primary);
+  margin-bottom: 2rem;
+}
+
+.learnMore {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--text-primary);
+  color: var(--bg-primary);
+  padding: 1rem 2.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  transition: var(--transition-smooth);
+  border: none;
+  cursor: pointer;
+}
+
+.learnMore:hover {
+  background: var(--accent-primary);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(255, 109, 64, 0.3);
+}
+
+/* ─── Modal Overlay ─── */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modalPanel {
+  width: 100%;
+  max-width: 500px;
+  background: var(--bg-secondary);
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.modalHeader h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.modalCloseBtn {
+  color: var(--text-muted);
+  transition: var(--transition-smooth);
+}
+
+.modalCloseBtn:hover {
+  color: var(--text-primary);
+}
+
+.modalBody {
+  padding: 1.5rem;
+}
+
+/* ─── Success State ─── */
+.successState {
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.successIcon {
+  color: #10b981;
+  margin: 0 auto 1rem;
+  display: block;
+}
+
+.successState h4 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.successState p {
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+.etherealLink {
+  color: var(--accent-primary);
+  text-decoration: underline;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.closeBtn {
+  display: block;
+  width: 100%;
+  padding: 0.8rem;
+  background: var(--surface);
+  color: var(--text-primary);
+  border-radius: 8px;
+  margin-top: 2rem;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.closeBtn:hover {
+  border-color: var(--accent-primary);
+}
+
+/* ─── Form ─── */
+.mentorForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.formHint {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.formGroup label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.formGroup input,
+.formGroup textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease;
+}
+
+.formGroup input:focus,
+.formGroup textarea:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+}
+
+.formGroup textarea {
+  resize: vertical;
+}
+
+.errorText {
+  color: #ef4444;
+  font-size: 0.85rem;
+}
+
+.submitBtn {
+  width: 100%;
+  padding: 0.9rem;
+  background: var(--accent-primary);
+  color: white;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  border: none;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.submitBtn:hover:not(:disabled) {
+  background: #e85c2e;
+  transform: translateY(-1px);
+}
+
+.submitBtn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  .vibeCard {
+    padding: 3rem 1.5rem;
+  }
+
+  .vibeTitle {
+    font-size: 2rem;
+  }
+
+  .sectionTitle {
+    font-size: 2.2rem;
+  }
+}

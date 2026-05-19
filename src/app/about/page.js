@@ -8,7 +8,8 @@ import {
   Compass,
   Users2,
   Globe2,
-  ShieldCheck
+  ShieldCheck,
+  Info
 } from 'lucide-react';
 import Section from '@/components/Section';
 import GlassCard from '@/components/GlassCard';
@@ -62,9 +63,17 @@ export default function AboutPage() {
     <div className={styles.pageWrapper}>
       <header className={styles.hero}>
         <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6 }}
+          className={styles.heroBadge}
+        >
+          <Info size={16} /> About Us
+        </motion.div>
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.8, delay: 0.1 }}
           className={styles.heroContent}
         >
           <h1 className={styles.title}>Who <span className={styles.highlight}>We Are</span></h1>

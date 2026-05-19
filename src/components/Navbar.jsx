@@ -26,7 +26,7 @@ const Navbar = () => {
     if (mobileMenuOpen) {
       document.body.style.overflow = 'auto';
     }
-  }, [pathname]);
+  }, [pathname]); uupf
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
@@ -50,13 +50,13 @@ const Navbar = () => {
           <span className={styles.logoIcon}>✧</span>
           <span className={styles.logoText}>Kingshima</span>
         </Link>
-        
+
         {/* Desktop Links */}
         <ul className={`${styles.links} ${styles.desktopOnly}`}>
           {navLinks.map((link) => (
             <li key={link.path}>
-              <Link 
-                href={link.path} 
+              <Link
+                href={link.path}
                 className={pathname === link.path ? styles.active : ''}
               >
                 {link.name}
@@ -69,13 +69,13 @@ const Navbar = () => {
           <button className={styles.themeToggle} onClick={toggleTheme} aria-label="Toggle theme">
             {theme === 'dark' ? '☼' : '☾'}
           </button>
-          
+
           <Link href="/pricing" className={`${styles.cta} ${styles.desktopOnly}`}>
             Build
           </Link>
 
-          <button 
-            className={`${styles.hamburger} ${mobileMenuOpen ? styles.hamburgerActive : ''}`} 
+          <button
+            className={`${styles.hamburger} ${mobileMenuOpen ? styles.hamburgerActive : ''}`}
             onClick={toggleMobileMenu}
             aria-label="Toggle mobile menu"
           >
@@ -92,8 +92,8 @@ const Navbar = () => {
           <ul className={styles.mobileLinks}>
             {navLinks.map((link) => (
               <li key={link.path}>
-                <Link 
-                  href={link.path} 
+                <Link
+                  href={link.path}
                   className={pathname === link.path ? styles.activeMobile : ''}
                 >
                   {link.name}

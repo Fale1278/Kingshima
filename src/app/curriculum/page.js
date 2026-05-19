@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Code2, Palette, Users, Lightbulb } from 'lucide-react';
+import { Code2, Palette, Users, Lightbulb, BookMarked } from 'lucide-react';
 import Section from '@/components/Section';
 import GlassCard from '@/components/GlassCard';
 import styles from './Curriculum.module.css';
@@ -71,9 +71,17 @@ const CurriculumPage = () => {
     <div className={styles.pageWrapper}>
       <header className={styles.hero}>
         <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6 }}
+          className={styles.heroBadge}
+        >
+          <BookMarked size={16} /> Curriculum Overview
+        </motion.div>
+        <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.8, delay: 0.1 }}
         >
           <h1 className={styles.title}>
             Detailed <span className={styles.highlight}>Curriculum</span>
