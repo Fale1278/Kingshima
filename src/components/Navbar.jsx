@@ -38,6 +38,7 @@ const Navbar = () => {
     { name: 'About', path: '/about' },
     { name: 'Team', path: '/team' },
     { name: 'Programs', path: '/programs' },
+    { name: 'Bootcamp', path: '/bootcamp' },
     { name: 'Community', path: '/community' },
     { name: 'Blog', path: '/blog' },
     { name: 'Contact', path: '/contact' },
