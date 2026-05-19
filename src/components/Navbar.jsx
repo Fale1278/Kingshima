@@ -26,7 +26,7 @@ const Navbar = () => {
     if (mobileMenuOpen) {
       document.body.style.overflow = 'auto';
     }
-  }, [pathname]); uupf
+  }, [pathname]);
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
