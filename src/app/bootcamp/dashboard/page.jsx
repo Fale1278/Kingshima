@@ -3,15 +3,34 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  CheckCircle2, Lock, GraduationCap, LayoutDashboard,
+  LogOut, Menu, PlayCircle, BookOpen, Clock, X, CreditCard, ChevronDown
+} from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { useBootcampAuth } from '@/context/BootcampAuthContext';
 import { COURSES } from '@/data/coursesData';
 import styles from './page.module.css';
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1 }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.4 } }
+};
+
 export default function DashboardPage() {
   const { student, login, logout, loading } = useBootcampAuth();
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const [activeCourseId, setActiveCourseId] = useState(null);
 
   // Simulated Checkout states
@@ -20,7 +39,7 @@ export default function DashboardPage() {
   const [ccNumber, setCcNumber] = useState('');
   const [ccExpiry, setCcExpiry] = useState('');
   const [ccCvc, setCcCvc] = useState('');
-  const [paymentStatus, setPaymentStatus] = useState('idle'); // 'idle' | 'processing' | 'success'
+  const [paymentStatus, setPaymentStatus] = useState('idle');
 
   useEffect(() => {
     if (!loading && !student) {
@@ -28,7 +47,6 @@ export default function DashboardPage() {
     }
   }, [student, loading, router]);
 
-  // Load last active course from localStorage if available
   useEffect(() => {
     if (student) {
       const saved = localStorage.getItem('active_course_id');
@@ -51,11 +69,9 @@ export default function DashboardPage() {
   const isEnrolled = (courseId) => progress.includes(`enrolled-${courseId}`);
   const isPaid = (courseId) => progress.includes(`paid-${courseId}`);
 
-  // Fetch active course object
   const activeCourse = COURSES.find((c) => c.id === activeCourseId) || null;
   const isCurrentlyPaid = activeCourse ? isPaid(activeCourse.id) : false;
 
-  // Course Specific Progress Calculator
   const getCourseStats = (course) => {
     if (!course) return { completedCount: 0, total: 0, pct: 0 };
     const allLessonIds = course.curriculum.flatMap((w) => w.lessons.map((l) => l.id));
@@ -75,11 +91,9 @@ export default function DashboardPage() {
     : null;
 
   const updateProgressInDb = async (newProgress) => {
-    // 1. Sync React context & localStorage
     const updatedStudent = { ...student, progress: newProgress };
     login(updatedStudent);
 
-    // 2. Persist to Supabase
     try {
       await supabase
         .from('students')
@@ -114,11 +128,9 @@ export default function DashboardPage() {
       setPaymentStatus('success');
       
       const newProgress = [...progress];
-      // Add enrolled tag if not already there
       if (!newProgress.includes(`enrolled-${checkoutCourse.id}`)) {
         newProgress.push(`enrolled-${checkoutCourse.id}`);
       }
-      // Add paid tag
       if (!newProgress.includes(`paid-${checkoutCourse.id}`)) {
         newProgress.push(`paid-${checkoutCourse.id}`);
       }
@@ -150,27 +162,51 @@ export default function DashboardPage() {
       <aside className={`${styles.sidebar} ${sidebarOpen ? styles.sidebarOpen : ''}`}>
         <div className={styles.sidebarInner}>
           <div className={styles.sidebarLogo}>
-            <span className={styles.logoIcon}>✧</span>
+            <LayoutDashboard className={styles.logoIcon} />
             <span className={styles.logoText}>Kingshima Hub</span>
           </div>
 
-          {/* Course Selector Dropdown in Sidebar */}
           <div className={styles.sidebarCourseSelector}>
             <span className={styles.courseSelectLabel}>My Learning Tracks</span>
-            <select
-              value={activeCourseId || ''}
-              onChange={(e) => handleSelectCourse(e.target.value || null)}
-              className={styles.courseDropdown}
-              id="sidebar-course-selector"
-            >
-              <option value="">🏫 Courses Catalog</option>
-              {COURSES.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {isPaid(c.id) ? '✓ ' : isEnrolled(c.id) ? '💳 ' : '🔒 '}
-                  {c.title}
-                </option>
-              ))}
-            </select>
+            <div className={styles.customDropdownContainer}>
+              <button 
+                className={styles.customDropdownBtn} 
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+              >
+                <span className={styles.customDropdownText}>
+                  {activeCourse ? activeCourse.title : 'Course Catalog'}
+                </span>
+                <ChevronDown size={16} className={`${styles.dropdownIcon} ${dropdownOpen ? styles.dropdownIconOpen : ''}`} />
+              </button>
+              
+              <AnimatePresence>
+                {dropdownOpen && (
+                  <motion.div 
+                    initial={{ opacity: 0, y: -5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -5 }}
+                    transition={{ duration: 0.15 }}
+                    className={styles.customDropdownMenu}
+                  >
+                    <button 
+                      className={`${styles.dropdownItem} ${!activeCourseId ? styles.dropdownItemActive : ''}`}
+                      onClick={() => { handleSelectCourse(null); setDropdownOpen(false); }}
+                    >
+                      <LayoutDashboard size={14} /> Course Catalog
+                    </button>
+                    {COURSES.map((c) => (
+                      <button 
+                        key={c.id} 
+                        className={`${styles.dropdownItem} ${activeCourseId === c.id ? styles.dropdownItemActive : ''}`}
+                        onClick={() => { handleSelectCourse(c.id); setDropdownOpen(false); }}
+                      >
+                        <BookOpen size={14} /> {c.title}
+                      </button>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
 
           <nav className={styles.sidebarNav}>
@@ -188,9 +224,9 @@ export default function DashboardPage() {
                       <div className={styles.weekNavHeader}>
                         <span
                           className={styles.weekDot}
-                          style={{ background: weekDone ? '#34d399' : weekActive ? week.color : 'var(--border)' }}
+                          style={{ background: weekDone ? '#34d399' : weekActive ? week.color : 'rgba(255,255,255,0.1)' }}
                         />
-                        <span className={styles.weekNavTitle}>Week {week.week} — {week.title}</span>
+                        <span className={styles.weekNavTitle}>Week {week.week}</span>
                       </div>
                       <ul className={styles.lessonNav}>
                         {week.lessons.map((lesson) => {
@@ -202,7 +238,11 @@ export default function DashboardPage() {
                                 className={`${styles.lessonNavLink} ${done ? styles.lessonDone : ''}`}
                                 onClick={() => setSidebarOpen(false)}
                               >
-                                <span className={styles.lessonCheck}>{done ? '✓' : '○'}</span>
+                                {done ? (
+                                  <CheckCircle2 className={styles.lessonIcon} size={14} />
+                                ) : (
+                                  <PlayCircle className={styles.lessonIcon} size={14} />
+                                )}
                                 {lesson.title}
                               </Link>
                             </li>
@@ -214,19 +254,18 @@ export default function DashboardPage() {
                 })}
               </>
             ) : (
-              <div style={{ padding: '0 0.5rem', fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-                Select a paid active course to view your syllabus outline.
+              <div style={{ padding: '0 0.5rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                Select an unlocked course to view your syllabus outline.
               </div>
             )}
           </nav>
 
-          <button className={styles.logoutBtn} onClick={logout} id="dashboard-logout">
-            Logout
+          <button className={styles.logoutBtn} onClick={logout}>
+            <LogOut size={16} /> Logout
           </button>
         </div>
       </aside>
 
-      {/* Sidebar overlay (mobile) */}
       {sidebarOpen && (
         <div
           className={styles.overlay}
@@ -238,41 +277,40 @@ export default function DashboardPage() {
       {/* ── Main Panel ────────────────────────── */}
       <div className={styles.main}>
 
-        {/* Top bar */}
         <header className={styles.topbar}>
           <button
             className={styles.menuBtn}
             onClick={() => setSidebarOpen(true)}
             aria-label="Open menu"
-            id="dashboard-menu-btn"
           >
-            <span /><span /><span />
+            <Menu size={24} />
           </button>
           <div className={styles.topbarRight}>
-            <span className={styles.topbarName}>👋 {student.username}</span>
-            <button className={styles.logoutBtnInline} onClick={logout}>Logout</button>
+            <div className={styles.userProfile}>
+              <div className={styles.userAvatar}>
+                {student.username.charAt(0).toUpperCase()}
+              </div>
+              <span className={styles.topbarName}>{student.username}</span>
+            </div>
           </div>
         </header>
 
         <main className={styles.content}>
 
-          {/* 1. COURSES HUB VIEW */}
           {activeCourseId === null ? (
-            <>
-              <section className={styles.welcomeSection}>
+            <motion.div variants={containerVariants} initial="hidden" animate="show">
+              <motion.section variants={itemVariants} className={styles.welcomeSection}>
                 <div className={styles.welcomeText}>
                   <h1 className={styles.welcomeTitle}>
-                    Welcome back, <span className={styles.accent}>{student.username}</span> 👋
+                    Welcome back, <span className={styles.accent}>{student.username}</span>
                   </h1>
                   <p className={styles.welcomeDesc}>
-                    This is your learning dashboard. Enroll in tracks, complete simulated checkout payments, and manage your skill progress.
+                    Your learning hub. Select a track, continue your progress, or enroll in a new skill.
                   </p>
                 </div>
-              </section>
+              </motion.section>
 
-              <section className={styles.courseSection}>
-                <h2 className={styles.courseTitle}>Your Available Learning Tracks</h2>
-                
+              <motion.section variants={itemVariants} className={styles.courseSection}>
                 <div className={styles.courseCatalogGrid}>
                   {COURSES.map((course) => {
                     const enrolled = isEnrolled(course.id);
@@ -280,27 +318,27 @@ export default function DashboardPage() {
                     const stats = getCourseStats(course);
 
                     return (
-                      <div key={course.id} className={styles.catalogCard}>
+                      <motion.div key={course.id} variants={itemVariants} className={styles.catalogCard}>
                         <div 
                           className={styles.catalogCardImage} 
                           style={{ backgroundImage: `url(${course.imageUrl})` }}
                         >
-                          <span style={{ position: 'absolute', top: '1rem', right: '1rem' }}>
+                          <div className={styles.catalogBadgeContainer}>
                             {paid ? (
-                              <span className={`${styles.paymentBadge} ${styles.badgePaid}`}>✓ Active</span>
+                              <span className={`${styles.badge} ${styles.badgePaid}`}><CheckCircle2 size={12}/> Active</span>
                             ) : enrolled ? (
-                              <span className={`${styles.paymentBadge} ${styles.badgeEnrolled}`}>💳 Enrolled</span>
+                              <span className={`${styles.badge} ${styles.badgeEnrolled}`}><CreditCard size={12}/> Enrolled</span>
                             ) : (
-                              <span className={`${styles.paymentBadge} ${styles.badgeUnenrolled}`}>🔒 Locked</span>
+                              <span className={`${styles.badge} ${styles.badgeUnenrolled}`}><Lock size={12}/> Locked</span>
                             )}
-                          </span>
+                          </div>
                         </div>
                         <div className={styles.catalogCardContent}>
                           <h3 className={styles.catalogCardTitle}>{course.title}</h3>
                           <p className={styles.catalogCardDesc}>{course.description}</p>
                           {paid && (
                             <div style={{ marginTop: '0.5rem' }}>
-                              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', marginBottom: '0.25rem' }}>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', marginBottom: '0.4rem', color: 'var(--text-secondary)' }}>
                                 <span>Progress</span>
                                 <span>{stats.pct}%</span>
                               </div>
@@ -311,14 +349,14 @@ export default function DashboardPage() {
                           )}
                         </div>
                         <div className={styles.catalogCardFooter}>
-                          <span style={{ fontSize: '0.85rem' }}>Price: <strong>${course.price}</strong></span>
+                          <span className={styles.catalogPrice}>${course.price}</span>
                           
                           {!enrolled && !paid && (
                             <button 
                               onClick={() => handleEnroll(course.id)}
                               className={`${styles.catalogActionBtn} ${styles.btnEnroll}`}
                             >
-                              Enroll in Course
+                              Enroll Now
                             </button>
                           )}
                           {enrolled && !paid && (
@@ -326,7 +364,7 @@ export default function DashboardPage() {
                               onClick={() => handleOpenCheckout(course)}
                               className={`${styles.catalogActionBtn} ${styles.btnPay}`}
                             >
-                              Unlock Course
+                              Unlock Access
                             </button>
                           )}
                           {paid && (
@@ -334,81 +372,87 @@ export default function DashboardPage() {
                               onClick={() => handleSelectCourse(course.id)}
                               className={`${styles.catalogActionBtn} ${styles.btnEnter}`}
                             >
-                              Enter Syllabus →
+                              Syllabus <PlayCircle size={16}/>
                             </button>
                           )}
                         </div>
-                      </div>
+                      </motion.div>
                     );
                   })}
                 </div>
-              </section>
-            </>
+              </motion.section>
+            </motion.div>
           ) : (
-            
-            /* 2. SPECIFIC ACTIVE COURSE VIEW */
-            <>
-              <button 
+            <motion.div variants={containerVariants} initial="hidden" animate="show">
+              <motion.button 
+                variants={itemVariants}
                 onClick={() => handleSelectCourse(null)} 
                 className={styles.backBtn}
               >
-                ← Back to Courses Hub
-              </button>
+                ← Back to Hub
+              </motion.button>
 
-              <section className={styles.welcomeSection}>
-                <div className={styles.welcomeText}>
-                  <span className={styles.paymentBadge} style={{ borderColor: 'var(--accent-primary)', color: 'var(--accent-primary)', marginBottom: '0.5rem', display: 'inline-block' }}>
-                    {activeCourse.category}
-                  </span>
-                  <h1 className={styles.welcomeTitle}>{activeCourse.title}</h1>
-                  <p className={styles.welcomeDesc}>
-                    Learn directly from <strong>{activeCourse.instructor}</strong> • Course duration: <strong>{activeCourse.duration}</strong>
-                  </p>
-                </div>
-              </section>
+              <motion.section variants={itemVariants} className={styles.welcomeSection} style={{ marginBottom: '1rem' }}>
+                <span className={`${styles.badge} ${styles.badgeCategory}`}>
+                  {activeCourse.category}
+                </span>
+                <h1 className={styles.welcomeTitle}>{activeCourse.title}</h1>
+                <p className={styles.welcomeDesc}>
+                  Learn directly from <strong>{activeCourse.instructor}</strong> • Course duration: <strong>{activeCourse.duration}</strong>
+                </p>
+              </motion.section>
 
-              {/* Locked Screen overlay if Course is Unpaid */}
               {!isCurrentlyPaid ? (
-                <div className={styles.lockedOverlay}>
-                  <span className={styles.lockIcon}>🔒</span>
-                  <h2 className={styles.lockTitle}>Course Curriculum Locked</h2>
+                <motion.div variants={itemVariants} className={styles.lockedOverlay}>
+                  <div className={styles.lockIcon}><Lock size={32}/></div>
+                  <h2 className={styles.lockTitle}>Curriculum Locked</h2>
                   <p className={styles.lockDesc}>
-                    You have enrolled in this course, but must unlock full database access by completing payment registration.
+                    You have enrolled in this course, but must unlock full access by completing payment registration.
                   </p>
                   <button 
                     onClick={() => handleOpenCheckout(activeCourse)}
                     className={`${styles.catalogActionBtn} ${styles.btnPay}`}
-                    style={{ fontSize: '1rem', padding: '0.75rem 2rem' }}
+                    style={{ fontSize: '1rem', padding: '0.8rem 2.5rem', marginTop: '1rem' }}
                   >
-                    Pay & Unlock Course (${activeCourse.price})
+                    Unlock Course (${activeCourse.price})
                   </button>
-                </div>
+                </motion.div>
               ) : (
                 <>
-                  {/* Stats Row */}
-                  <div className={styles.statsRow}>
+                  <motion.div variants={itemVariants} className={styles.statsRow}>
                     <div className={styles.statCard}>
+                      <div className={`${styles.statIconWrapper} ${styles.success}`}>
+                        <CheckCircle2 size={24}/>
+                      </div>
                       <span className={styles.statNum}>{activeStats.completedCount}</span>
-                      <span className={styles.statCaption}>Lessons Completed</span>
+                      <span className={styles.statCaption}>Completed</span>
                     </div>
                     <div className={styles.statCard}>
+                      <div className={`${styles.statIconWrapper} ${styles.warning}`}>
+                        <BookOpen size={24}/>
+                      </div>
                       <span className={styles.statNum}>{activeStats.total - activeStats.completedCount}</span>
                       <span className={styles.statCaption}>Remaining</span>
                     </div>
                     <div className={styles.statCard}>
+                      <div className={`${styles.statIconWrapper} ${styles.info}`}>
+                        <GraduationCap size={24}/>
+                      </div>
                       <span className={styles.statNum}>{activeStats.pct}%</span>
-                      <span className={styles.statCaption}>Complete</span>
+                      <span className={styles.statCaption}>Success Rate</span>
                     </div>
                     <div className={styles.statCard}>
-                      <span className={styles.statNum}>{activeCourse.duration}</span>
+                      <div className={`${styles.statIconWrapper} ${styles.primary}`}>
+                        <Clock size={24}/>
+                      </div>
+                      <span className={styles.statNum} style={{ fontSize: '1.2rem', marginTop: '0.5rem' }}>{activeCourse.duration}</span>
                       <span className={styles.statCaption}>Duration</span>
                     </div>
-                  </div>
+                  </motion.div>
 
-                  {/* Progress Bar */}
-                  <div className={styles.progressCard}>
+                  <motion.div variants={itemVariants} className={styles.progressCard}>
                     <div className={styles.progressHeader}>
-                      <span className={styles.progressLabel}>Overall Course Progress</span>
+                      <span className={styles.progressLabel}>Overall Mastery</span>
                       <span className={styles.progressPct}>{activeStats.pct}%</span>
                     </div>
                     <div className={styles.progressTrack}>
@@ -417,22 +461,12 @@ export default function DashboardPage() {
                         style={{ width: `${activeStats.pct}%` }}
                       />
                     </div>
-                    <div className={styles.progressWeeks}>
-                      {activeCourse.curriculum.map((w) => {
-                        const done = w.lessons.filter((l) => progress.includes(l.id)).length;
-                        return (
-                          <div key={w.week} className={styles.progressWeekItem}>
-                            <span style={{ color: w.color, fontWeight: 700 }}>W{w.week}</span>
-                            <span className={styles.progressWeekFrac}>{done}/{w.lessons.length}</span>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
+                  </motion.div>
 
-                  {/* Curriculum weeks accordion cards */}
-                  <section className={styles.courseSection}>
-                    <h2 className={styles.courseTitle}>Curriculum syllabus weeks</h2>
+                  <motion.section variants={itemVariants} className={styles.courseSection}>
+                    <div className={styles.sectionHeader}>
+                      <h2 className={styles.courseTitle}>Course Curriculum</h2>
+                    </div>
                     <div className={styles.weekGrid}>
                       {activeCourse.curriculum.map((week) => {
                         const done = week.lessons.filter((l) => progress.includes(l.id)).length;
@@ -449,25 +483,32 @@ export default function DashboardPage() {
                               <span className={styles.weekCardBadge} style={{ color: week.color, background: week.color + '18' }}>
                                 Week {week.week}
                               </span>
-                              {pct === 100 && <span className={styles.completedBadge}>✓ Complete</span>}
-                              {isActive && pct < 100 && <span className={styles.activeBadge}>In Progress</span>}
                             </div>
-                            <h3 className={styles.weekCardTitle}>{week.title}</h3>
-                            <p className={styles.weekCardTheme}>{week.theme}</p>
-                            <div className={styles.weekProgressBar}>
-                              <div className={styles.weekProgressFill} style={{ width: `${pct}%`, background: week.color }} />
+                            <div>
+                              <h3 className={styles.weekCardTitle}>{week.title}</h3>
+                              <p className={styles.weekCardTheme}>{week.theme}</p>
                             </div>
-                            <p className={styles.weekProgressText}>{done}/{total} lessons completed</p>
+                            
+                            <div>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                                <span>{done}/{total} lessons</span>
+                                <span>{pct}%</span>
+                              </div>
+                              <div className={styles.weekProgressBar}>
+                                <div className={styles.weekProgressFill} style={{ width: `${pct}%`, background: week.color }} />
+                              </div>
+                            </div>
+
                             <ul className={styles.weekLessonList}>
                               {week.lessons.map((lesson) => {
                                 const lessonDone = progress.includes(lesson.id);
                                 return (
-                                  <li key={lesson.id} className={styles.weekLessonItem}>
+                                  <li key={lesson.id}>
                                     <Link
                                       href={`/bootcamp/dashboard/lesson/${lesson.id}`}
                                       className={`${styles.lessonLink} ${lessonDone ? styles.lessonLinkDone : ''}`}
                                     >
-                                      <span className={styles.lessonCheckIcon}>{lessonDone ? '✓' : '▶'}</span>
+                                      {lessonDone ? <CheckCircle2 className={styles.lessonCheckIcon} /> : <PlayCircle className={styles.lessonCheckIcon} />}
                                       {lesson.title}
                                     </Link>
                                   </li>
@@ -475,134 +516,149 @@ export default function DashboardPage() {
                               })}
                             </ul>
                             <div className={styles.weekAssignment}>
-                              <span className={styles.assignIcon}>📋</span>
+                              <BookOpen className={styles.assignIcon} size={16} />
                               <span>{week.assignment}</span>
                             </div>
                           </div>
                         );
                       })}
                     </div>
-                  </section>
+                  </motion.section>
                 </>
               )}
-            </>
+            </motion.div>
           )}
 
         </main>
       </div>
 
       {/* ── SIMULATED CHECKOUT MODAL OVERLAY ────── */}
-      {checkoutCourse && (
-        <div className={styles.checkoutOverlay}>
-          <div className={styles.checkoutCard}>
-            
-            <header className={styles.checkoutHeader}>
-              <h3 style={{ fontSize: '1.1rem', fontWeight: 700 }}>Simulated Checkout</h3>
-              <button 
-                onClick={() => setCheckoutCourse(null)}
-                style={{ cursor: 'pointer', background: 'none', border: 'none', color: '#fff', fontSize: '1.2rem' }}
-                disabled={paymentStatus === 'processing'}
-              >
-                ✕
-              </button>
-            </header>
+      <AnimatePresence>
+        {checkoutCourse && (
+          <motion.div 
+            initial={{ opacity: 0 }} 
+            animate={{ opacity: 1 }} 
+            exit={{ opacity: 0 }}
+            className={styles.checkoutOverlay}
+          >
+            <motion.div 
+              initial={{ scale: 0.95, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.95, y: 20 }}
+              className={styles.checkoutCard}
+            >
+              
+              <header className={styles.checkoutHeader}>
+                <h3 style={{ fontSize: '1.1rem', fontWeight: 700 }}>Secure Checkout</h3>
+                <button 
+                  onClick={() => setCheckoutCourse(null)}
+                  style={{ cursor: 'pointer', background: 'none', border: 'none', color: 'var(--text-secondary)' }}
+                  disabled={paymentStatus === 'processing'}
+                >
+                  <X size={20} />
+                </button>
+              </header>
 
-            <div className={styles.checkoutBody}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--border)', paddingBottom: '0.75rem' }}>
-                <div>
-                  <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Unlock Course</span>
-                  <p style={{ fontWeight: 700, fontSize: '0.95rem' }}>{checkoutCourse.title}</p>
-                </div>
-                <div style={{ textAlign: 'right' }}>
-                  <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Amount</span>
-                  <p style={{ fontWeight: 800, color: 'var(--accent-primary)', fontSize: '1.1rem' }}>${checkoutCourse.price}</p>
-                </div>
-              </div>
-
-              {paymentStatus === 'idle' && (
-                <form onSubmit={handleCheckoutSubmit} className={styles.checkoutForm}>
-                  <div className={styles.field}>
-                    <label className={styles.label}>Cardholder Name</label>
-                    <input 
-                      type="text" 
-                      placeholder="Jane Doe" 
-                      className={styles.input}
-                      value={ccName}
-                      onChange={(e) => setCcName(e.target.value)}
-                      required
-                    />
+              <div className={styles.checkoutBody}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '1rem' }}>
+                  <div>
+                    <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Unlock Course</span>
+                    <p style={{ fontWeight: 700, fontSize: '0.95rem' }}>{checkoutCourse.title}</p>
                   </div>
-
-                  <div className={styles.field}>
-                    <label className={styles.label}>Card Number</label>
-                    <input 
-                      type="text" 
-                      placeholder="4000 1234 5678 9010" 
-                      maxLength="19"
-                      className={styles.input}
-                      value={ccNumber}
-                      onChange={(e) => setCcNumber(e.target.value)}
-                      required
-                    />
+                  <div style={{ textAlign: 'right' }}>
+                    <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Total Amount</span>
+                    <p style={{ fontWeight: 800, color: 'var(--accent-primary)', fontSize: '1.2rem' }}>${checkoutCourse.price}</p>
                   </div>
+                </div>
 
-                  <div className={styles.checkoutRow}>
+                {paymentStatus === 'idle' && (
+                  <form onSubmit={handleCheckoutSubmit} className={styles.checkoutForm}>
                     <div className={styles.field}>
-                      <label className={styles.label}>Expiration (MM/YY)</label>
+                      <label className={styles.label}>Cardholder Name</label>
                       <input 
                         type="text" 
-                        placeholder="12/28" 
-                        maxLength="5"
+                        placeholder="Jane Doe" 
                         className={styles.input}
-                        value={ccExpiry}
-                        onChange={(e) => setCcExpiry(e.target.value)}
+                        value={ccName}
+                        onChange={(e) => setCcName(e.target.value)}
                         required
                       />
                     </div>
+
                     <div className={styles.field}>
-                      <label className={styles.label}>CVC</label>
+                      <label className={styles.label}>Card Number</label>
                       <input 
                         type="text" 
-                        placeholder="123" 
-                        maxLength="3"
+                        placeholder="4000 1234 5678 9010" 
+                        maxLength="19"
                         className={styles.input}
-                        value={ccCvc}
-                        onChange={(e) => setCcCvc(e.target.value)}
+                        value={ccNumber}
+                        onChange={(e) => setCcNumber(e.target.value)}
                         required
                       />
                     </div>
-                  </div>
 
-                  <button 
-                    type="submit" 
-                    className={styles.submitBtn}
-                    style={{ marginTop: '0.5rem' }}
+                    <div className={styles.checkoutRow}>
+                      <div className={styles.field}>
+                        <label className={styles.label}>Expiration</label>
+                        <input 
+                          type="text" 
+                          placeholder="MM/YY" 
+                          maxLength="5"
+                          className={styles.input}
+                          value={ccExpiry}
+                          onChange={(e) => setCcExpiry(e.target.value)}
+                          required
+                        />
+                      </div>
+                      <div className={styles.field}>
+                        <label className={styles.label}>CVC</label>
+                        <input 
+                          type="text" 
+                          placeholder="123" 
+                          maxLength="3"
+                          className={styles.input}
+                          value={ccCvc}
+                          onChange={(e) => setCcCvc(e.target.value)}
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <button 
+                      type="submit" 
+                      className={styles.submitBtn}
+                    >
+                      <Lock size={16} /> Pay ${checkoutCourse.price}
+                    </button>
+                  </form>
+                )}
+
+                {paymentStatus === 'processing' && (
+                  <div className={styles.checkoutStatus}>
+                    <span className={styles.loadingSpinner} />
+                    <p style={{ fontWeight: 600 }}>Processing simulated transaction...</p>
+                    <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Securing network authentication</span>
+                  </div>
+                )}
+
+                {paymentStatus === 'success' && (
+                  <motion.div 
+                    initial={{ scale: 0.8, opacity: 0 }} 
+                    animate={{ scale: 1, opacity: 1 }} 
+                    className={styles.checkoutStatus}
                   >
-                    Simulate Payment (${checkoutCourse.price}) →
-                  </button>
-                </form>
-              )}
+                    <div className={styles.successCheck}><CheckCircle2 size={32} /></div>
+                    <p style={{ fontWeight: 700, color: '#34d399', fontSize: '1.2rem' }}>Payment Successful!</p>
+                    <span style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>Course has been unlocked on your student account.</span>
+                  </motion.div>
+                )}
 
-              {paymentStatus === 'processing' && (
-                <div className={styles.checkoutStatus}>
-                  <span className={styles.loadingSpinner} />
-                  <p style={{ fontWeight: 600 }}>Processing simulated transaction...</p>
-                  <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Securing network authentication</span>
-                </div>
-              )}
-
-              {paymentStatus === 'success' && (
-                <div className={styles.checkoutStatus}>
-                  <span className={styles.successCheck}>✓</span>
-                  <p style={{ fontWeight: 700, color: '#34d399', fontSize: '1.2rem' }}>Payment Successful!</p>
-                  <span style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>Course has been unlocked on your student account.</span>
-                </div>
-              )}
-
-            </div>
-          </div>
-        </div>
-      )}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
     </div>
   );
