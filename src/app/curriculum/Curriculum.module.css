@@ -134,3 +134,93 @@
     padding: 2rem;
   }
 }
+
+/* Hero Actions and Buttons */
+.heroActions {
+  display: flex;
+  gap: 1.25rem;
+  justify-content: center;
+  margin-top: 2.5rem;
+  flex-wrap: wrap;
+}
+
+.btnPrimary {
+  display: inline-flex;
+  align-items: center;
+  background: var(--accent-primary);
+  color: #ffffff;
+  padding: 0.85rem 2rem;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 1rem;
+  transition: var(--transition-smooth);
+  box-shadow: 0 4px 12px rgba(255, 109, 64, 0.2);
+}
+
+.btnPrimary:hover {
+  background: #e85e30;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(255, 109, 64, 0.4);
+}
+
+.btnOutline {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.85rem 2rem;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 1rem;
+  transition: var(--transition-smooth);
+}
+
+.btnOutline:hover {
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+  transform: translateY(-2px);
+  background: rgba(255, 109, 64, 0.03);
+}
+
+/* Curriculum CTA Section */
+.ctaSection {
+  padding: 6rem 0;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.ctaCard {
+  background: linear-gradient(135deg, rgba(255, 109, 64, 0.05) 0%, rgba(96, 165, 250, 0.05) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  padding: 4rem 3rem;
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  width: 100%;
+}
+
+.ctaTitle {
+  font-size: 2.25rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+.ctaSubtitle {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto 2.5rem;
+  line-height: 1.6;
+}
+
+.ctaActions {
+  display: flex;
+  gap: 1.25rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}

@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Code2, Palette, Users, Lightbulb, BookMarked } from 'lucide-react';
 import Section from '@/components/Section';
@@ -91,6 +92,20 @@ const CurriculumPage = () => {
             Our curriculums are carefully curated to ensure you build both practical 
             capabilities and strong conceptual understanding.
           </p>
+          
+          <motion.div 
+            className={styles.heroActions}
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+          >
+            <Link href="/bootcamp/login" className={styles.btnPrimary}>
+              Access Student Dashboard
+            </Link>
+            <Link href="/bootcamp#register" className={styles.btnOutline}>
+              Enroll & Register
+            </Link>
+          </motion.div>
         </motion.div>
       </header>
 
@@ -128,6 +143,29 @@ const CurriculumPage = () => {
             </motion.div>
           ))}
         </div>
+      </Section>
+
+      <Section id="curriculum-cta" className={styles.ctaSection}>
+        <motion.div 
+          className={styles.ctaCard}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+        >
+          <h2 className={styles.ctaTitle}>Ready to start your learning journey?</h2>
+          <p className={styles.ctaSubtitle}>
+            Gain access to interactive lessons, track your progress, submit assignments, and get 24/7 AI tutoring through our student dashboard.
+          </p>
+          <div className={styles.ctaActions}>
+            <Link href="/bootcamp/login" className={styles.btnPrimary}>
+              Access Student Dashboard
+            </Link>
+            <Link href="/bootcamp#register" className={styles.btnOutline}>
+              Register for Next Cohort
+            </Link>
+          </div>
+        </motion.div>
       </Section>
     </div>
   );

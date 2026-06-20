@@ -261,7 +261,7 @@ export default function AdminPage() {
                           )}
                           <td>
                             <span className={styles.progressPill}>
-                              {Array.isArray(s.progress) ? s.progress.length : 0} / 12
+                              {Array.isArray(s.progress) ? s.progress.filter(p => !p.startsWith('enrolled-') && !p.startsWith('paid-')).length : 0} lessons
                             </span>
                           </td>
                           <td className={styles.muted}>

@@ -1,33 +1,38 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { useBootcampAuth } from '@/context/BootcampAuthContext';
-import { COURSE_WEEKS } from '@/data/bootcampData';
+import { COURSES } from '@/data/coursesData';
 import styles from './page.module.css';
 
-// Flatten all lessons into a lookup map
-const ALL_LESSONS = COURSE_WEEKS.flatMap((w) =>
-  w.lessons.map((l) => ({ ...l, week: w.week, weekTitle: w.title, weekColor: w.color }))
+// ─── Build a flat list of all lessons from every course ──────────────────────
+const ALL_LESSONS = COURSES.flatMap((course) =>
+  course.curriculum.flatMap((week) =>
+    week.lessons.map((lesson) => ({
+      ...lesson,
+      week: week.week,
+      weekTitle: week.title,
+      weekColor: week.color,
+      courseId: course.id,
+      courseTitle: course.title,
+    }))
+  )
 );
 
 function findLesson(id) {
   return ALL_LESSONS.find((l) => l.id === id) || null;
 }
 
-function findWeek(weekNum) {
-  return COURSE_WEEKS.find((w) => w.week === weekNum) || null;
-}
-
 export default function LessonPage({ params }) {
-  const { id } = params;
+  const unwrappedParams = use(params);
+  const { id } = unwrappedParams;
   const router = useRouter();
   const { student, logout, markComplete, loading } = useBootcampAuth();
 
   const lesson = findLesson(id);
-  const week   = lesson ? findWeek(lesson.week) : null;
 
   // Submission state
   const [submissionText, setSubmissionText] = useState('');
@@ -38,10 +43,29 @@ export default function LessonPage({ params }) {
   const [completing, setCompleting]         = useState(false);
   const [dbLesson, setDbLesson]             = useState(null); // fetched from Supabase
 
+  // Notes state with local storage
+  const [notes, setNotes]                   = useState('');
+
   // Auth guard
   useEffect(() => {
     if (!loading && !student) router.replace('/bootcamp/login');
   }, [student, loading, router]);
+
+  // Load notes from local storage when lesson changes
+  useEffect(() => {
+    if (student && lesson) {
+      const savedNotes = localStorage.getItem(`notes_${student.id}_${lesson.id}`);
+      if (savedNotes) setNotes(savedNotes);
+    }
+  }, [student, lesson]);
+
+  const handleNotesChange = (e) => {
+    const newNotes = e.target.value;
+    setNotes(newNotes);
+    if (student && lesson) {
+      localStorage.setItem(`notes_${student.id}_${lesson.id}`, newNotes);
+    }
+  };
 
   // Optionally fetch richer lesson data (video_url, resources) from Supabase
   useEffect(() => {
@@ -77,12 +101,13 @@ export default function LessonPage({ params }) {
   const progress    = student.progress || [];
   const isCompleted = progress.includes(lesson.id);
 
-  // Next lesson
-  const lessonIndex = ALL_LESSONS.findIndex((l) => l.id === id);
-  const nextLesson  = ALL_LESSONS[lessonIndex + 1] || null;
+  // Next lesson within the same course
+  const courseLessons = ALL_LESSONS.filter((l) => l.courseId === lesson.courseId);
+  const lessonIndex   = courseLessons.findIndex((l) => l.id === id);
+  const nextLesson    = courseLessons[lessonIndex + 1] || null;
 
-  const videoUrl = dbLesson?.video_url || lesson.video_url || '';
-  const resources = dbLesson?.resources || lesson.resources || [];
+  const videoUrl  = dbLesson?.video_url  || lesson.video_url  || '';
+  const resources = dbLesson?.resources  || lesson.resources  || [];
 
   const handleMarkComplete = async () => {
     if (isCompleted) return;
@@ -150,6 +175,9 @@ export default function LessonPage({ params }) {
           ← Dashboard
         </Link>
         <div className={styles.topbarMeta}>
+          <span className={styles.courseTag}>
+            {lesson.courseTitle}
+          </span>
           <span className={styles.weekTag} style={{ color: lesson.weekColor, background: lesson.weekColor + '18' }}>
             Week {lesson.week} — {lesson.weekTitle}
           </span>
@@ -197,6 +225,8 @@ export default function LessonPage({ params }) {
                   className={styles.notesArea}
                   placeholder="Take notes as you watch the lesson…"
                   rows={8}
+                  value={notes}
+                  onChange={handleNotesChange}
                 />
               </section>
 
