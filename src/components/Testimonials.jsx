@@ -2,7 +2,8 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Quote, Star, UserCircle } from 'lucide-react';
+import { Quote, Star } from 'lucide-react';
+import Image from 'next/image';
 import Section from './Section';
 import GlassCard from './GlassCard';
 import styles from './Testimonials.module.css';
@@ -77,7 +78,13 @@ const Testimonials = () => {
                 <div className={styles.footer}>
                   <div className={styles.author}>
                     <div className={styles.avatarWrapper}>
-                      <img src={t.image} alt={t.name} className={styles.avatarImg} />
+                      <Image 
+                        src={t.image} 
+                        alt={`Avatar of ${t.name}`} 
+                        width={48} 
+                        height={48} 
+                        className={styles.avatarImg} 
+                      />
                     </div>
                     <div className={styles.info}>
                       <h4 className={styles.name}>{t.name}</h4>
@@ -85,8 +92,8 @@ const Testimonials = () => {
                     </div>
                   </div>
                   <div className={styles.stars}>
-                    {[...Array(t.rating)].map((_, i) => (
-                      <Star key={i} size={12} fill="var(--accent-primary)" color="var(--accent-primary)" />
+                    {[...Array(t.rating)].map((_, idx) => (
+                      <Star key={idx} size={12} fill="var(--accent-primary)" color="var(--accent-primary)" />
                     ))}
                   </div>
                 </div>

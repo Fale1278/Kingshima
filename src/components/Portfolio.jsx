@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import Section from './Section';
 import styles from './Portfolio.module.css';
 
@@ -37,7 +38,13 @@ const Portfolio = () => {
         {trainingAreas.map((area, index) => (
           <div key={index} className={styles.projectCard}>
             <div className={styles.imageWrapper}>
-              <img src={area.image} alt={area.title} className={styles.image} />
+              <Image
+                src={area.image}
+                alt={area.title}
+                fill
+                sizes="(max-width: 768px) 100vw, 33vw"
+                className={styles.image}
+              />
               <div className={styles.overlay}>
                 <span className={styles.category}>{area.category}</span>
                 <h3 className={styles.projectTitle}>{area.title}</h3>

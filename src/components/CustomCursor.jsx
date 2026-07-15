@@ -5,8 +5,18 @@ const CustomCursor = () => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isPointer, setIsPointer] = useState(false);
   const [hasMoved, setHasMoved] = useState(false);
+  const [isTouch, setIsTouch] = useState(false);
 
   useEffect(() => {
+    const checkTouch = () => {
+      return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    };
+    
+    if (checkTouch()) {
+      setIsTouch(true);
+      return;
+    }
+
     const handleMouseMove = (e) => {
       setPosition({ x: e.clientX, y: e.clientY });
       setHasMoved(true);
@@ -18,7 +28,7 @@ const CustomCursor = () => {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  if (!hasMoved) return null;
+  if (isTouch || !hasMoved) return null;
 
   return (
     <div 

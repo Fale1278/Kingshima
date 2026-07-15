@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import Section from './Section';
 import GlassCard from './GlassCard';
 import { teamMembers } from '@/data/teamMembers';
@@ -17,7 +18,13 @@ const Team = () => {
         {teamMembers.map((member, index) => (
           <GlassCard key={index} delay={index * 150} className={styles.memberCard}>
             <div className={styles.imageWrapper}>
-              <img src={member.image} alt={member.name} className={styles.image} />
+              <Image 
+                src={member.image} 
+                alt={member.name} 
+                width={120} 
+                height={120} 
+                className={styles.image} 
+              />
             </div>
             <h3 className={styles.name}>{member.name}</h3>
             <p className={styles.role}>{member.role}</p>

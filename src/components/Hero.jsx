@@ -1,12 +1,10 @@
 'use client';
 
 import React from 'react';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import styles from './Hero.module.css';
 
 const Hero = () => {
-  const router = useRouter();
-
   return (
     <section id="hero" className={styles.hero} style={{ position: 'relative' }}>
       <div className={styles.content} style={{ position: 'relative', zIndex: 10 }}>
@@ -21,8 +19,8 @@ const Hero = () => {
         </p>
 
         <div className={styles.ctaGroup}>
-          <button className={styles.primaryBtn} onClick={() => router.push('/explore')}>Explore Our Mission</button>
-          <button className={styles.secondaryBtn} onClick={() => router.push('/community')}>Join the Community</button>
+          <Link href="/explore" className={styles.primaryBtn}>Explore Our Mission</Link>
+          <Link href="/community" className={styles.secondaryBtn}>Join the Community</Link>
         </div>
       </div>
 

@@ -1,31 +1,62 @@
-'use client';
-
-import { usePathname } from 'next/navigation';
-import { ThemeProvider } from '@/context/ThemeContext';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
-import CustomCursor from '@/components/CustomCursor';
+import AppShell from '@/components/AppShell';
+import ThemeScript from '@/components/ThemeScript';
 import '@/styles/globals.css';
 
+export const metadata = {
+  title: {
+    default: 'Kingshima Foundation — Faith + Tech Innovation',
+    template: '%s | Kingshima Foundation',
+  },
+  description:
+    'The Kingshima Foundation is a faith-driven, youth-focused initiative dedicated to equipping young people with technical skills, creative tools, and Godly values.',
+  keywords: [
+    'Kingshima',
+    'faith and tech',
+    'youth empowerment',
+    'tech training',
+    'mentorship',
+    'bootcamp',
+    'Nigeria',
+  ],
+  authors: [{ name: 'Kingshima Foundation' }],
+  creator: 'Kingshima Foundation',
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    siteName: 'Kingshima Foundation',
+    title: 'Kingshima Foundation — Faith + Tech Innovation',
+    description:
+      'Equipping the next generation with technical skills and Godly values to thrive in a fast-changing world.',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Kingshima Foundation — Faith + Tech Innovation',
+    description:
+      'Equipping the next generation with technical skills and Godly values.',
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+};
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  themeColor: [
+    { media: '(prefers-color-scheme: dark)', color: '#000000' },
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+  ],
+};
+
 export default function RootLayout({ children }) {
-  const pathname = usePathname();
-
-  // Hide global chrome on private bootcamp pages
-  const hideShell =
-    pathname?.startsWith('/bootcamp/dashboard') ||
-    pathname?.startsWith('/bootcamp/admin');
-
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <ThemeScript />
+      </head>
       <body>
-        <ThemeProvider>
-          <div className="app-container">
-            <CustomCursor />
-            {!hideShell && <Navbar />}
-            <main>{children}</main>
-            {!hideShell && <Footer />}
-          </div>
-        </ThemeProvider>
+        <AppShell>{children}</AppShell>
       </body>
     </html>
   );
