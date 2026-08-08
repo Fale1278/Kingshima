@@ -13,7 +13,7 @@ const Contact = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus({ type: 'submitting', text: 'Sending your signal...' });
-    
+
     try {
       const res = await fetch('/api/contact', {
         method: 'POST',
@@ -21,7 +21,7 @@ const Contact = () => {
         body: JSON.stringify(formData)
       });
       const data = await res.json();
-      
+
       if (res.ok) {
         setStatus({ type: 'success', text: 'Message received! We will get back to you soon.' });
         setFormData({ name: '', email: '', subject: 'Mentorship', message: '' });
@@ -47,7 +47,7 @@ const Contact = () => {
               <CheckCircle2 color="var(--accent-success, #10b981)" size={48} style={{ margin: '0 auto 1rem' }} />
               <h3 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: 'var(--text-primary)' }}>Message Received</h3>
               <p style={{ color: 'var(--text-secondary)' }}>{status.text}</p>
-              <button 
+              <button
                 onClick={() => setStatus({ type: '', text: '' })}
                 style={{ marginTop: '2rem', padding: '0.75rem 1.5rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '8px', color: 'white', fontWeight: '600' }}
               >
@@ -58,15 +58,15 @@ const Contact = () => {
             <form className={styles.form} onSubmit={handleSubmit}>
               <div className={styles.inputGroup}>
                 <label>Full Name</label>
-                <input required type="text" placeholder="Your name" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
+                <input required type="text" placeholder="Your name" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} />
               </div>
               <div className={styles.inputGroup}>
                 <label>Email Address</label>
-                <input required type="email" placeholder="yourname@example.com" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} />
+                <input required type="email" placeholder="yourname@example.com" value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} />
               </div>
               <div className={styles.inputGroup}>
                 <label>How would you like to get involved?</label>
-                <select className={styles.select} value={formData.subject} onChange={e => setFormData({...formData, subject: e.target.value})}>
+                <select className={styles.select} value={formData.subject} onChange={e => setFormData({ ...formData, subject: e.target.value })}>
                   <option value="Mentorship">Mentorship</option>
                   <option value="Skill Training">Skill Training</option>
                   <option value="Donation & Support">Donation & Support</option>
@@ -75,11 +75,11 @@ const Contact = () => {
               </div>
               <div className={styles.inputGroup}>
                 <label>Tell us your vision</label>
-                <textarea required placeholder="How do you see yourself contributing..." value={formData.message} onChange={e => setFormData({...formData, message: e.target.value})}></textarea>
+                <textarea required placeholder="How do you see yourself contributing..." value={formData.message} onChange={e => setFormData({ ...formData, message: e.target.value })}></textarea>
               </div>
-              
+
               {status.type === 'error' && <p style={{ color: '#ef4444', fontSize: '0.9rem', marginBottom: '1rem' }}>{status.text}</p>}
-              
+
               <button type="submit" disabled={status.type === 'submitting'} className={styles.submitBtn} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem', opacity: status.type === 'submitting' ? 0.7 : 1 }}>
                 {status.type === 'submitting' ? <><Loader2 size={18} className="spin" /> Transmitting...</> : <><Send size={18} /> Connect Now</>}
               </button>
@@ -94,7 +94,7 @@ const Contact = () => {
           </div>
           <div className={styles.infoItem}>
             <h4>Contact Info</h4>
-            <p>kingshima@gmail.com<br />+234 903 9556 992</p>
+            <p>kingshima001@gmail.com<br />+234 903 9556 992</p>
           </div>
         </div>
       </div>

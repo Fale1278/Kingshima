@@ -56,7 +56,7 @@ const ContactClient = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus({ type: 'submitting', text: 'Initializing secure transmission...' });
-    
+
     // Attach location string if available
     const payload = {
       ...formData,
@@ -70,7 +70,7 @@ const ContactClient = () => {
         body: JSON.stringify(payload)
       });
       const data = await res.json();
-      
+
       if (res.ok) {
         setStatus({ type: 'success', text: data.message });
         setFormData({ name: '', email: '', subject: 'Partnership', message: '' });
@@ -85,7 +85,7 @@ const ContactClient = () => {
   const contactDetails = [
     { icon: Mail, title: "Secure Line", content: "hello@kingshimafoundation.org" },
     { icon: Phone, title: "Comm-Link", content: "+234 903 9556 992" },
-    { icon: MapPin, title: "Global HQ", content: "Lagos, Nigeria (Hybrid Ops)" },
+    { icon: MapPin, title: "Global HQ", content: "Langtang North, Plateau, Nigeria (Hybrid Ops)" },
     { icon: Globe, title: "Operating Zone", content: "GMT+1 / Worldwide" },
   ];
 
@@ -106,7 +106,7 @@ const ContactClient = () => {
         >
           Signal <span className={styles.highlight}>Nexus</span>
         </motion.h1>
-        <motion.p 
+        <motion.p
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
@@ -119,18 +119,18 @@ const ContactClient = () => {
       <div className={styles.mainGrid}>
         <div className={styles.infoSection}>
           <div className={styles.mapContainer}>
-             <iframe 
-               src={coords 
-                 ? `https://maps.google.com/maps?q=${coords.lat},${coords.lng}&z=15&output=embed` 
-                 : "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126839.8142345037!2d3.2798791334645226!3d6.5243793!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x103b8b2ae68280c1%3A0xdc9e87a367c3d9cb!2sLagos%2C%20Nigeria!5e0!3m2!1sen!2sus!4v1714151703273!5m2!1sen!2sus"
-               }
-               width="100%" 
-               height="100%" 
-               style={{ border: 0, filter: 'grayscale(80%) invert(90%) contrast(1.2)' }} 
-               allowFullScreen="" 
-               loading="lazy" 
-               referrerPolicy="no-referrer-when-downgrade">
-             </iframe>
+            <iframe
+              src={coords
+                ? `https://maps.google.com/maps?q=${coords.lat},${coords.lng}&z=15&output=embed`
+                : "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126839.8142345037!2d3.2798791334645226!3d6.5243793!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x103b8b2ae68280c1%3A0xdc9e87a367c3d9cb!2sLagos%2C%20Nigeria!5e0!3m2!1sen!2sus!4v1714151703273!5m2!1sen!2sus"
+              }
+              width="100%"
+              height="100%"
+              style={{ border: 0, filter: 'grayscale(80%) invert(90%) contrast(1.2)' }}
+              allowFullScreen=""
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade">
+            </iframe>
           </div>
 
           <div className={styles.sectionHeader}>
@@ -183,18 +183,18 @@ const ContactClient = () => {
                   <div className={styles.formRow}>
                     <div className={styles.inputGroup}>
                       <label>Operator Name</label>
-                      <input required type="text" placeholder="John Doe" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
+                      <input required type="text" placeholder="John Doe" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} />
                     </div>
                     <div className={styles.inputGroup}>
                       <label>Signal Node (Email)</label>
-                      <input required type="email" placeholder="john@example.com" value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})} />
+                      <input required type="email" placeholder="john@example.com" value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} />
                     </div>
                   </div>
-                  
+
                   <div className={styles.inputGroup}>
                     <label>Transmission Type</label>
                     <div className={styles.selectWrapper}>
-                      <select required value={formData.subject} onChange={e => setFormData({...formData, subject: e.target.value})}>
+                      <select required value={formData.subject} onChange={e => setFormData({ ...formData, subject: e.target.value })}>
                         <option value="Partnership">Partnership Inquiry</option>
                         <option value="Project Proposal">Project Proposal</option>
                         <option value="Mentorship">Mentorship Query</option>
@@ -205,15 +205,15 @@ const ContactClient = () => {
 
                   <div className={styles.inputGroup}>
                     <label>Encrypted Payload (Message)</label>
-                    <textarea required rows="5" placeholder="Detail your project or questions here..." value={formData.message} onChange={e => setFormData({...formData, message: e.target.value})}></textarea>
+                    <textarea required rows="5" placeholder="Detail your project or questions here..." value={formData.message} onChange={e => setFormData({ ...formData, message: e.target.value })}></textarea>
                   </div>
-                  
+
                   {status.type === 'error' && (
                     <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className={styles.errorText}>
                       {status.text}
                     </motion.p>
                   )}
-                  
+
                   <button type="submit" disabled={status.type === 'submitting'} className={styles.submitBtn} style={{ opacity: status.type === 'submitting' ? 0.7 : 1 }}>
                     {status.type === 'submitting' ? <><Loader2 size={18} className="spin" /> Establishing Connection...</> : <><Send size={18} /> Transmit Query</>}
                   </button>
