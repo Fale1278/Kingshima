@@ -6,11 +6,12 @@ import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   CheckCircle2, Lock, GraduationCap, LayoutDashboard,
-  LogOut, Menu, PlayCircle, BookOpen, Clock, X, CreditCard, ChevronDown
+  LogOut, Menu, PlayCircle, BookOpen, Clock, ChevronDown
 } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
 import { useBootcampAuth } from '@/context/BootcampAuthContext';
 import { COURSES } from '@/data/coursesData';
+import { APPLICATION_FEE_NGN, APPLICATION_FEE_KOBO } from '@/data/accessConfig';
+import { payApplicationFee } from '@/lib/paystack';
 import styles from './page.module.css';
 
 const containerVariants = {
@@ -33,13 +34,9 @@ export default function DashboardPage() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [activeCourseId, setActiveCourseId] = useState(null);
 
-  // Simulated Checkout states
-  const [checkoutCourse, setCheckoutCourse] = useState(null);
-  const [ccName, setCcName] = useState('');
-  const [ccNumber, setCcNumber] = useState('');
-  const [ccExpiry, setCcExpiry] = useState('');
-  const [ccCvc, setCcCvc] = useState('');
-  const [paymentStatus, setPaymentStatus] = useState('idle');
+  // Acceptance-fee payment state (single flat fee unlocks everything)
+  const [paying, setPaying] = useState(false);
+  const [payError, setPayError] = useState('');
 
   useEffect(() => {
     if (!loading && !student) {
@@ -66,11 +63,10 @@ export default function DashboardPage() {
 
   const progress = student.progress || [];
 
-  const isEnrolled = (courseId) => progress.includes(`enrolled-${courseId}`);
-  const isPaid = (courseId) => progress.includes(`paid-${courseId}`);
+  // Single global gate: one acceptance fee unlocks every course, not just one.
+  const isPaidUp = student.application_paid === true;
 
   const activeCourse = COURSES.find((c) => c.id === activeCourseId) || null;
-  const isCurrentlyPaid = activeCourse ? isPaid(activeCourse.id) : false;
 
   const getCourseStats = (course) => {
     if (!course) return { completedCount: 0, total: 0, pct: 0 };
@@ -84,65 +80,55 @@ export default function DashboardPage() {
 
   const activeStats = activeCourse ? getCourseStats(activeCourse) : { completedCount: 0, total: 0, pct: 0 };
 
-  const currentWeek = activeCourse && isCurrentlyPaid
+  const currentWeek = activeCourse && isPaidUp
     ? activeCourse.curriculum.find((w) =>
         w.lessons.some((l) => !progress.includes(l.id))
       ) || activeCourse.curriculum[activeCourse.curriculum.length - 1]
     : null;
 
-  const updateProgressInDb = async (newProgress) => {
-    const updatedStudent = { ...student, progress: newProgress };
-    login(updatedStudent);
+  // Pay the one-time acceptance fee via Paystack, then verify server-side
+  // before unlocking access to every course.
+  const handleUnlockAccess = async () => {
+    setPayError('');
+    setPaying(true);
 
     try {
-      await supabase
-        .from('students')
-        .update({ progress: newProgress })
-        .eq('id', student.id);
+      const reference = `kingshima-${student.id || student.username}-${Date.now()}`;
+
+      await payApplicationFee({
+        email: student.email,
+        amountKobo: APPLICATION_FEE_KOBO,
+        reference,
+        onClose: () => setPaying(false),
+        onSuccess: async (ref) => {
+          try {
+            const res = await fetch('/api/verify-payment', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ reference: ref, studentId: student.id }),
+            });
+            const data = await res.json();
+
+            if (!res.ok || !data.success) {
+              throw new Error(data.error || 'Verification failed.');
+            }
+
+            login({ ...student, application_paid: true });
+          } catch (err) {
+            console.error(err);
+            setPayError(
+              `Payment received but we couldn't confirm it automatically. Contact support with reference: ${ref}`
+            );
+          } finally {
+            setPaying(false);
+          }
+        },
+      });
     } catch (err) {
-      console.error('Failed to sync progress with Supabase:', err);
+      console.error(err);
+      setPayError(err.message || 'Could not start payment. Please try again.');
+      setPaying(false);
     }
-  };
-
-  const handleEnroll = async (courseId) => {
-    if (isEnrolled(courseId)) return;
-    const newProgress = [...progress, `enrolled-${courseId}`];
-    await updateProgressInDb(newProgress);
-  };
-
-  const handleOpenCheckout = (course) => {
-    setCheckoutCourse(course);
-    setCcName('');
-    setCcNumber('');
-    setCcExpiry('');
-    setCcCvc('');
-    setPaymentStatus('idle');
-  };
-
-  const handleCheckoutSubmit = (e) => {
-    e.preventDefault();
-    if (!ccName || !ccNumber || !ccExpiry || !ccCvc) return;
-
-    setPaymentStatus('processing');
-    setTimeout(async () => {
-      setPaymentStatus('success');
-      
-      const newProgress = [...progress];
-      if (!newProgress.includes(`enrolled-${checkoutCourse.id}`)) {
-        newProgress.push(`enrolled-${checkoutCourse.id}`);
-      }
-      if (!newProgress.includes(`paid-${checkoutCourse.id}`)) {
-        newProgress.push(`paid-${checkoutCourse.id}`);
-      }
-
-      await updateProgressInDb(newProgress);
-
-      setTimeout(() => {
-        setCheckoutCourse(null);
-        setActiveCourseId(checkoutCourse.id);
-        localStorage.setItem('active_course_id', checkoutCourse.id);
-      }, 1500);
-    }, 2000);
   };
 
   const handleSelectCourse = (courseId) => {
@@ -210,7 +196,7 @@ export default function DashboardPage() {
           </div>
 
           <nav className={styles.sidebarNav}>
-            {activeCourse && isCurrentlyPaid ? (
+            {activeCourse && isPaidUp ? (
               <>
                 <p className={styles.navLabel}>Course Syllabus</p>
                 {activeCourse.curriculum.map((week) => {
@@ -305,16 +291,37 @@ export default function DashboardPage() {
                     Welcome back, <span className={styles.accent}>{student.username}</span>
                   </h1>
                   <p className={styles.welcomeDesc}>
-                    Your learning hub. Select a track, continue your progress, or enroll in a new skill.
+                    Your learning hub. {isPaidUp
+                      ? 'Pick a track below and continue your progress.'
+                      : 'Registration is free — pay a one-time acceptance fee to unlock every track.'}
                   </p>
                 </div>
               </motion.section>
 
+              {!isPaidUp && (
+                <motion.section variants={itemVariants} className={styles.lockedOverlay} style={{ marginBottom: '1.5rem' }}>
+                  <div className={styles.lockIcon}><Lock size={28}/></div>
+                  <h2 className={styles.lockTitle}>Unlock All Courses — ₦{APPLICATION_FEE_NGN.toLocaleString()}</h2>
+                  <p className={styles.lockDesc}>
+                    One small, one-time acceptance fee gives you full, lifetime access to every course on the platform — Web Development, Graphic Design, Data Analysis, and AI Automations.
+                  </p>
+                  {payError && (
+                    <p style={{ color: '#f87171', fontSize: '0.85rem', marginTop: '0.75rem' }}>{payError}</p>
+                  )}
+                  <button
+                    onClick={handleUnlockAccess}
+                    disabled={paying}
+                    className={`${styles.catalogActionBtn} ${styles.btnPay}`}
+                    style={{ fontSize: '1rem', padding: '0.8rem 2.5rem', marginTop: '1rem' }}
+                  >
+                    {paying ? 'Processing…' : `Pay ₦${APPLICATION_FEE_NGN.toLocaleString()} & Unlock`}
+                  </button>
+                </motion.section>
+              )}
+
               <motion.section variants={itemVariants} className={styles.courseSection}>
                 <div className={styles.courseCatalogGrid}>
                   {COURSES.map((course) => {
-                    const enrolled = isEnrolled(course.id);
-                    const paid = isPaid(course.id);
                     const stats = getCourseStats(course);
 
                     return (
@@ -324,10 +331,8 @@ export default function DashboardPage() {
                           style={{ backgroundImage: `url(${course.imageUrl})` }}
                         >
                           <div className={styles.catalogBadgeContainer}>
-                            {paid ? (
-                              <span className={`${styles.badge} ${styles.badgePaid}`}><CheckCircle2 size={12}/> Active</span>
-                            ) : enrolled ? (
-                              <span className={`${styles.badge} ${styles.badgeEnrolled}`}><CreditCard size={12}/> Enrolled</span>
+                            {isPaidUp ? (
+                              <span className={`${styles.badge} ${styles.badgePaid}`}><CheckCircle2 size={12}/> Unlocked</span>
                             ) : (
                               <span className={`${styles.badge} ${styles.badgeUnenrolled}`}><Lock size={12}/> Locked</span>
                             )}
@@ -336,7 +341,7 @@ export default function DashboardPage() {
                         <div className={styles.catalogCardContent}>
                           <h3 className={styles.catalogCardTitle}>{course.title}</h3>
                           <p className={styles.catalogCardDesc}>{course.description}</p>
-                          {paid && (
+                          {isPaidUp && (
                             <div style={{ marginTop: '0.5rem' }}>
                               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', marginBottom: '0.4rem', color: 'var(--text-secondary)' }}>
                                 <span>Progress</span>
@@ -349,30 +354,22 @@ export default function DashboardPage() {
                           )}
                         </div>
                         <div className={styles.catalogCardFooter}>
-                          <span className={styles.catalogPrice}>${course.price}</span>
-                          
-                          {!enrolled && !paid && (
-                            <button 
-                              onClick={() => handleEnroll(course.id)}
-                              className={`${styles.catalogActionBtn} ${styles.btnEnroll}`}
-                            >
-                              Enroll Now
-                            </button>
-                          )}
-                          {enrolled && !paid && (
-                            <button 
-                              onClick={() => handleOpenCheckout(course)}
-                              className={`${styles.catalogActionBtn} ${styles.btnPay}`}
-                            >
-                              Unlock Access
-                            </button>
-                          )}
-                          {paid && (
+                          <span className={styles.catalogPrice}>{course.duration}</span>
+
+                          {isPaidUp ? (
                             <button 
                               onClick={() => handleSelectCourse(course.id)}
                               className={`${styles.catalogActionBtn} ${styles.btnEnter}`}
                             >
                               Syllabus <PlayCircle size={16}/>
+                            </button>
+                          ) : (
+                            <button 
+                              onClick={handleUnlockAccess}
+                              disabled={paying}
+                              className={`${styles.catalogActionBtn} ${styles.btnPay}`}
+                            >
+                              {paying ? 'Processing…' : 'Unlock Access'}
                             </button>
                           )}
                         </div>
@@ -402,19 +399,23 @@ export default function DashboardPage() {
                 </p>
               </motion.section>
 
-              {!isCurrentlyPaid ? (
+              {!isPaidUp ? (
                 <motion.div variants={itemVariants} className={styles.lockedOverlay}>
                   <div className={styles.lockIcon}><Lock size={32}/></div>
                   <h2 className={styles.lockTitle}>Curriculum Locked</h2>
                   <p className={styles.lockDesc}>
-                    You have enrolled in this course, but must unlock full access by completing payment registration.
+                    Pay the one-time ₦{APPLICATION_FEE_NGN.toLocaleString()} acceptance fee to unlock this course and every other track on the platform.
                   </p>
+                  {payError && (
+                    <p style={{ color: '#f87171', fontSize: '0.85rem', marginTop: '0.5rem' }}>{payError}</p>
+                  )}
                   <button 
-                    onClick={() => handleOpenCheckout(activeCourse)}
+                    onClick={handleUnlockAccess}
+                    disabled={paying}
                     className={`${styles.catalogActionBtn} ${styles.btnPay}`}
                     style={{ fontSize: '1rem', padding: '0.8rem 2.5rem', marginTop: '1rem' }}
                   >
-                    Unlock Course (${activeCourse.price})
+                    {paying ? 'Processing…' : `Unlock All Courses (₦${APPLICATION_FEE_NGN.toLocaleString()})`}
                   </button>
                 </motion.div>
               ) : (
@@ -532,9 +533,11 @@ export default function DashboardPage() {
         </main>
       </div>
 
-      {/* ── SIMULATED CHECKOUT MODAL OVERLAY ────── */}
+      {/* ── PAYMENT CONFIRMATION OVERLAY ─────────
+          Paystack's own popup handles card entry. This just covers the
+          short window while we verify the transaction server-side. ──── */}
       <AnimatePresence>
-        {checkoutCourse && (
+        {paying && (
           <motion.div 
             initial={{ opacity: 0 }} 
             animate={{ opacity: 1 }} 
@@ -547,113 +550,12 @@ export default function DashboardPage() {
               exit={{ scale: 0.95, y: 20 }}
               className={styles.checkoutCard}
             >
-              
-              <header className={styles.checkoutHeader}>
-                <h3 style={{ fontSize: '1.1rem', fontWeight: 700 }}>Secure Checkout</h3>
-                <button 
-                  onClick={() => setCheckoutCourse(null)}
-                  style={{ cursor: 'pointer', background: 'none', border: 'none', color: 'var(--text-secondary)' }}
-                  disabled={paymentStatus === 'processing'}
-                >
-                  <X size={20} />
-                </button>
-              </header>
-
               <div className={styles.checkoutBody}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '1rem' }}>
-                  <div>
-                    <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Unlock Course</span>
-                    <p style={{ fontWeight: 700, fontSize: '0.95rem' }}>{checkoutCourse.title}</p>
-                  </div>
-                  <div style={{ textAlign: 'right' }}>
-                    <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Total Amount</span>
-                    <p style={{ fontWeight: 800, color: 'var(--accent-primary)', fontSize: '1.2rem' }}>${checkoutCourse.price}</p>
-                  </div>
+                <div className={styles.checkoutStatus}>
+                  <span className={styles.loadingSpinner} />
+                  <p style={{ fontWeight: 600 }}>Confirming your payment…</p>
+                  <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Please don&apos;t close this page.</span>
                 </div>
-
-                {paymentStatus === 'idle' && (
-                  <form onSubmit={handleCheckoutSubmit} className={styles.checkoutForm}>
-                    <div className={styles.field}>
-                      <label className={styles.label}>Cardholder Name</label>
-                      <input 
-                        type="text" 
-                        placeholder="Jane Doe" 
-                        className={styles.input}
-                        value={ccName}
-                        onChange={(e) => setCcName(e.target.value)}
-                        required
-                      />
-                    </div>
-
-                    <div className={styles.field}>
-                      <label className={styles.label}>Card Number</label>
-                      <input 
-                        type="text" 
-                        placeholder="4000 1234 5678 9010" 
-                        maxLength="19"
-                        className={styles.input}
-                        value={ccNumber}
-                        onChange={(e) => setCcNumber(e.target.value)}
-                        required
-                      />
-                    </div>
-
-                    <div className={styles.checkoutRow}>
-                      <div className={styles.field}>
-                        <label className={styles.label}>Expiration</label>
-                        <input 
-                          type="text" 
-                          placeholder="MM/YY" 
-                          maxLength="5"
-                          className={styles.input}
-                          value={ccExpiry}
-                          onChange={(e) => setCcExpiry(e.target.value)}
-                          required
-                        />
-                      </div>
-                      <div className={styles.field}>
-                        <label className={styles.label}>CVC</label>
-                        <input 
-                          type="text" 
-                          placeholder="123" 
-                          maxLength="3"
-                          className={styles.input}
-                          value={ccCvc}
-                          onChange={(e) => setCcCvc(e.target.value)}
-                          required
-                        />
-                      </div>
-                    </div>
-
-                    <button 
-                      type="submit" 
-                      className={styles.submitBtn}
-                    >
-                      <Lock size={16} /> Pay ${checkoutCourse.price}
-                    </button>
-                  </form>
-                )}
-
-                {paymentStatus === 'processing' && (
-                  <div className={styles.checkoutStatus}>
-                    <span className={styles.loadingSpinner} />
-                    <p style={{ fontWeight: 600 }}>Processing simulated transaction...</p>
-                    <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Securing network authentication</span>
-                  </div>
-                )}
-
-                {paymentStatus === 'success' && (
-                  <motion.div 
-                    initial={{ scale: 0.8, opacity: 0 }} 
-                    animate={{ scale: 1, opacity: 1 }} 
-                    className={styles.checkoutStatus}
-                  >
-                    <div className={styles.successCheck}><CheckCircle2 size={32} /></div>
-                    <p style={{ fontWeight: 700, color: '#34d399', fontSize: '1.2rem' }}>Payment Successful!</p>
-                    <span style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>Course has been unlocked on your student account.</span>
-                  </motion.div>
-                )}
-
               </div>
             </motion.div>
           </motion.div>

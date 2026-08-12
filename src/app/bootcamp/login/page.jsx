@@ -212,6 +212,9 @@ export default function BootcampLoginPage() {
             <p className={styles.hint} style={{ textAlign: 'center', color: 'var(--text-secondary)' }}>
               ⚠️ Make sure to copy this code. It is required to log in to your dashboard in the future.
             </p>
+            <p className={styles.hint} style={{ textAlign: 'center', color: 'var(--text-secondary)' }}>
+              Registration is free. A small one-time acceptance fee unlocks full access to every course — you&apos;ll be prompted for it on your dashboard.
+            </p>
             <button
               type="button"
               onClick={handleAutoLogin}

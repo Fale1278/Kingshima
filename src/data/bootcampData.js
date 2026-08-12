@@ -148,37 +148,37 @@ export const COURSE_WEEKS = [
 ];
 
 export const WHAT_YOU_LEARN = [
-  { icon: '⚡', title: 'Prompt Engineering', desc: 'Communicate with AI like a pro and get results that actually work.' },
-  { icon: '🎨', title: 'AI Content Creation', desc: 'Write, design, and publish 10x faster using modern AI tools.' },
-  { icon: '🤖', title: 'Workflow Automation', desc: 'Automate repetitive tasks and reclaim hours each week.' },
-  { icon: '🧠', title: 'AI-Powered Research', desc: 'Learn and retain information faster with AI-assisted study.' },
-  { icon: '📅', title: 'Smart Time Management', desc: 'Use AI to plan, prioritize, and protect your productive hours.' },
-  { icon: '🚀', title: 'Ship Real Projects', desc: 'Build and launch a capstone project using everything you learned.' },
+  { icon: '💻', title: 'Web Development', desc: 'Build and publish real websites — HTML, CSS, JavaScript, and a live project.' },
+  { icon: '🎨', title: 'Graphic Design', desc: 'Design branded, scroll-stopping graphics using Canva, right from your phone.' },
+  { icon: '📊', title: 'Data Analysis', desc: 'Clean, analyse, and visualise real data using Sheets and beginner-friendly tools.' },
+  { icon: '🤖', title: 'AI Automations', desc: 'Use ChatGPT, Claude, and AI visual tools to automate real tasks and create faster.' },
+  { icon: '📋', title: 'Practical Assignments', desc: 'Every lesson ends with a real task, not just theory — you build as you learn.' },
+  { icon: '🚀', title: 'A Finished Project', desc: 'Each track ends with a real, shareable project you can show off.' },
 ];
 
 export const FAQ_ITEMS = [
   {
-    q: 'Who is this bootcamp for?',
-    a: 'This bootcamp is designed for creators, students, professionals, and entrepreneurs who want to use AI tools to work smarter. No coding experience required.',
+    q: 'Who is this platform for?',
+    a: 'Anyone who wants practical, real-world skills in web development, design, data, or AI — no prior experience required.',
   },
   {
-    q: 'How do I get access after paying?',
-    a: 'After payment confirmation, you will receive a unique Login Code via email within 24 hours. Use this code along with your email and username to log in.',
+    q: 'Is registration really free?',
+    a: 'Yes. Creating your student account costs nothing. A small one-time acceptance fee is only required to unlock full access to the courses.',
   },
   {
-    q: 'Are the sessions live or recorded?',
-    a: 'We have both. Lessons are pre-recorded so you can learn at your own pace. Live Q&A sessions are held weekly via Google Meet.',
+    q: 'How much is the acceptance fee, and what does it unlock?',
+    a: 'A one-time fee of a few thousand naira unlocks lifetime access to every course on the platform — not just one track.',
+  },
+  {
+    q: 'How do I pay?',
+    a: 'From your dashboard, after you register and log in. Payment is handled securely through Paystack.',
   },
   {
     q: 'How long do I have access?',
-    a: 'Once enrolled, you have lifetime access to all lesson recordings and resources from your cohort.',
-  },
-  {
-    q: 'What if I miss a live session?',
-    a: 'All live sessions are recorded and uploaded within 24 hours so you never miss anything.',
+    a: 'Once you pay the acceptance fee, you have lifetime access to every course and its resources.',
   },
   {
     q: 'Can I get a refund?',
-    a: 'We offer a 7-day refund policy. If you are not satisfied after completing Week 1, reach out to us and we will process your refund.',
+    a: 'We offer a 7-day refund window on the acceptance fee. If you are not satisfied after your first week, reach out and we will process your refund.',
   },
 ];

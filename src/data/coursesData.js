@@ -1,627 +1,482 @@
 // Courses Data representing all courses and their curriculums on the platform
+// Access model: registration is free. A single, one-time acceptance fee
+// (see /src/data/accessConfig.js) unlocks ALL courses below — there is no
+// per-course price anymore.
 
 export const COURSES = [
   {
-    id: 'fullstack',
-    title: 'Fullstack Web Development',
+    id: 'web-dev',
+    title: 'Web Development',
     category: 'Engineering',
     instructor: 'Kingshima Lead',
-    duration: '4 Weeks',
-    price: 199,
+    duration: '3 Weeks',
     imageUrl: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085',
-    description: 'Master modern web technologies from frontend UI to database integration.',
+    description: 'Build and publish real websites from scratch — HTML, CSS, JavaScript, and your first live project.',
     curriculum: [
       {
         week: 1,
-        title: 'HTML & CSS Essentials',
-        theme: 'Responsive Web Layouts',
+        title: 'Building Your First Website',
+        theme: 'HTML & CSS Basics',
         color: '#ff6d40',
         lessons: [
           {
-            id: 'fs-1-1',
-            title: 'Introduction to HTML & CSS',
+            id: 'wd-1-1',
+            title: 'HTML & Page Structure',
+            duration: '40 min',
+            description: 'Learn the building blocks every website is made of.',
+            video_url: '',
+            resources: ['HTML Cheat Sheet'],
+            assignment: 'Build the structure of a simple personal page.'
+          },
+          {
+            id: 'wd-1-2',
+            title: 'Styling with CSS',
             duration: '45 min',
-            description: 'Learn the basic skeleton of the web and style it with basic CSS selectors.',
+            description: 'Add colour, spacing, and layout to your page.',
             video_url: '',
-            resources: ['HTML Cheat Sheet', 'CSS Basics Guide'],
-            assignment: 'Build a semantic single-page personal biography website.'
+            resources: ['CSS Basics Guide'],
+            assignment: 'Style your personal page — fonts, colours, spacing.'
           },
           {
-            id: 'fs-1-2',
-            title: 'CSS Flexbox & Layouts',
-            duration: '60 min',
-            description: 'Master grid alignment and flexible boxes for responsive page design.',
+            id: 'wd-1-3',
+            title: 'Making It Mobile-Friendly',
+            duration: '35 min',
+            description: 'Make sure your site looks good on a phone, not just a laptop.',
             video_url: '',
-            resources: ['Flexbox Cheat Sheet', 'Layout Template'],
-            assignment: 'Create a responsive navigation bar and visual card grid.'
-          },
-          {
-            id: 'fs-1-3',
-            title: 'Responsive Design & Media Queries',
-            duration: '50 min',
-            description: 'Optimize page displays across mobile, tablet, and desktop viewports.',
-            video_url: '',
-            resources: ['Responsive Best Practices PDF'],
-            assignment: 'Make your biography website fully mobile-friendly.'
+            resources: ['Mobile-First Checklist'],
+            assignment: 'Make your page look right on a phone screen.'
           }
         ],
-        assignment: 'Design and code a fully responsive landing page from scratch.'
+        assignment: 'Publish a one-page personal portfolio site.'
       },
       {
         week: 2,
-        title: 'JavaScript Foundations',
-        theme: 'Interactive Web Programming',
+        title: 'Making It Interactive',
+        theme: 'JavaScript Basics',
         color: '#a78bfa',
         lessons: [
           {
-            id: 'fs-2-1',
-            title: 'JavaScript Syntax & Logic',
-            duration: '55 min',
-            description: 'Learn variables, conditions, loops, and functional programming basics.',
+            id: 'wd-2-1',
+            title: 'JavaScript Basics & Logic',
+            duration: '50 min',
+            description: 'Variables, conditions, and loops — the logic behind interactivity.',
             video_url: '',
-            resources: ['JS Foundations Handout'],
-            assignment: 'Write JavaScript functions to solve 10 algorithmic problems.'
+            resources: ['JS Basics Handout'],
+            assignment: 'Solve 5 simple logic problems in JavaScript.'
           },
           {
-            id: 'fs-2-2',
-            title: 'DOM Manipulation',
-            duration: '60 min',
-            description: 'Connect script files to your HTML elements and update them dynamically.',
-            video_url: '',
-            resources: ['DOM Selection Guide'],
-            assignment: 'Build a simple task tracker list with add/delete functionalities.'
-          },
-          {
-            id: 'fs-2-3',
-            title: 'Promises & Fetching APIs',
+            id: 'wd-2-2',
+            title: 'Making Pages Respond to Clicks',
             duration: '45 min',
-            description: 'Understand asynchronous operations, Promises, and fetch data from remote servers.',
+            description: 'Connect JavaScript to buttons and page elements.',
             video_url: '',
-            resources: ['Async Cheat Sheet'],
-            assignment: 'Fetch and display current weather details using a free REST API.'
+            resources: ['DOM Basics Guide'],
+            assignment: 'Build a button that adds items to a list.'
+          },
+          {
+            id: 'wd-2-3',
+            title: 'Pulling in Real Data',
+            duration: '40 min',
+            description: 'Fetch data from the internet and show it on your page.',
+            video_url: '',
+            resources: ['Fetch API Cheat Sheet'],
+            assignment: 'Show live weather or news data on a page.'
           }
         ],
-        assignment: 'Build an interactive dashboard application utilizing external API endpoints.'
+        assignment: 'Build a small interactive to-do app.'
       },
       {
         week: 3,
-        title: 'Modern React Development',
-        theme: 'Building Dynamic User Interfaces',
+        title: 'Shipping a Real Project',
+        theme: 'From Code to Live Website',
         color: '#34d399',
         lessons: [
           {
-            id: 'fs-3-1',
-            title: 'React Fundamentals & Component Architecture',
-            duration: '60 min',
-            description: 'Understand the virtual DOM, JSX, components, and props.',
+            id: 'wd-3-1',
+            title: 'Intro to React Components',
+            duration: '45 min',
+            description: 'A gentle first look at building UIs with reusable components.',
             video_url: '',
             resources: ['React Starter Guide'],
-            assignment: 'Refactor your API dashboard into reusable React components.'
+            assignment: 'Turn one section of your site into a component.'
           },
           {
-            id: 'fs-3-2',
-            title: 'State & Event Handling',
+            id: 'wd-3-2',
+            title: 'Getting Your Site Online',
+            duration: '35 min',
+            description: 'Deploy your project for free so anyone can visit it.',
+            video_url: '',
+            resources: ['Deploy Checklist'],
+            assignment: 'Deploy your project and share the live link.'
+          },
+          {
+            id: 'wd-3-3',
+            title: 'Building Your Portfolio Project',
             duration: '50 min',
-            description: 'Learn the useState hook and handle interactive event cycles.',
+            description: 'Put it all together into one project you can show employers or clients.',
             video_url: '',
-            resources: ['React State Cheat Sheet'],
-            assignment: 'Create an interactive filterable product list component.'
-          },
-          {
-            id: 'fs-3-3',
-            title: 'Effects & API Fetching in React',
-            duration: '45 min',
-            description: 'Implement the useEffect hook to sync components with APIs.',
-            video_url: '',
-            resources: ['UseEffect Best Practices'],
-            assignment: 'Implement automated data fetching and search in your dashboard app.'
+            resources: ['Portfolio Project Brief'],
+            assignment: 'Finish and polish your capstone website.'
           }
         ],
-        assignment: 'Develop a fully stateful, single-page application using React.'
-      },
-      {
-        week: 4,
-        title: 'Backend & APIs Integration',
-        theme: 'Shipping Your Fullstack Project',
-        color: '#fbbf24',
-        lessons: [
-          {
-            id: 'fs-4-1',
-            title: 'Node.js & Express Server Setup',
-            duration: '55 min',
-            description: 'Create a local HTTP server and learn express routing structures.',
-            video_url: '',
-            resources: ['Node Express Boilerplate'],
-            assignment: 'Create a server with CRUD endpoints for managing tasks.'
-          },
-          {
-            id: 'fs-4-2',
-            title: 'Database Design with MongoDB',
-            duration: '60 min',
-            description: 'Connect databases, map documents, and define structural schemas.',
-            video_url: '',
-            resources: ['Mongoose Schemas Reference'],
-            assignment: 'Integrate MongoDB with your Express CRUD server.'
-          },
-          {
-            id: 'fs-4-3',
-            title: 'Connecting Frontend & Backend',
-            duration: '50 min',
-            description: 'Establish CORS rules, configure proxy addresses, and deploy your site.',
-            video_url: '',
-            resources: ['Fullstack Deploy Checklist'],
-            assignment: 'Link your React dashboard to your backend server and deploy.'
-          }
-        ],
-        assignment: 'Deploy your complete Fullstack Web Application capstone project.'
+        assignment: 'Ship a live 3-page website with a working contact form.'
       }
     ]
   },
   {
-    id: 'digital-arts',
-    title: 'Digital Arts & Design',
-    category: 'Media',
+    id: 'graphic-design',
+    title: 'Graphic Design (Canva & Mobile)',
+    category: 'Design',
     instructor: 'Creative Director',
-    duration: '4 Weeks',
-    price: 149,
+    duration: '3 Weeks',
     imageUrl: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f',
-    description: 'Unleash your creativity and master modern digital UI/UX layout and branding tools.',
+    description: 'Design scroll-stopping graphics and brand visuals using Canva — right from your phone, no laptop needed.',
     curriculum: [
       {
         week: 1,
-        title: 'Figma Workspace & Layouts',
-        theme: 'Figma Layout Essentials',
+        title: 'Canva Basics on Mobile',
+        theme: 'Getting Comfortable in Canva',
+        color: '#ff6d40',
+        lessons: [
+          {
+            id: 'gd-1-1',
+            title: 'Navigating the Canva App',
+            duration: '30 min',
+            description: 'Learn your way around templates, elements, and the editor.',
+            video_url: '',
+            resources: ['Canva Quick-Start Guide'],
+            assignment: 'Recreate one template in your own style.'
+          },
+          {
+            id: 'gd-1-2',
+            title: 'Text & Layout That Work',
+            duration: '35 min',
+            description: 'Simple rules for text that reads well and looks clean.',
+            video_url: '',
+            resources: ['Layout Basics Sheet'],
+            assignment: 'Design 3 text-based quote graphics.'
+          },
+          {
+            id: 'gd-1-3',
+            title: 'Picking Colours & Fonts',
+            duration: '30 min',
+            description: 'Choose combinations that look intentional, not random.',
+            video_url: '',
+            resources: ['Colour Pairing Guide'],
+            assignment: 'Build a simple 3-colour, 2-font palette.'
+          }
+        ],
+        assignment: 'Design a 3-post Instagram carousel.'
+      },
+      {
+        week: 2,
+        title: 'Branding & Content Design',
+        theme: 'Designing for a Business',
+        color: '#a78bfa',
+        lessons: [
+          {
+            id: 'gd-2-1',
+            title: 'Building a Simple Brand Kit',
+            duration: '40 min',
+            description: 'Logo, colours, and fonts — kept consistent across every design.',
+            video_url: '',
+            resources: ['Brand Kit Template'],
+            assignment: 'Create a one-page brand kit for a business idea.'
+          },
+          {
+            id: 'gd-2-2',
+            title: 'Flyers & Posters That Sell',
+            duration: '40 min',
+            description: 'Design promotional graphics people actually stop to read.',
+            video_url: '',
+            resources: ['Flyer Layout Pack'],
+            assignment: 'Design a flyer for a real or imaginary event.'
+          },
+          {
+            id: 'gd-2-3',
+            title: 'Social Media Templates',
+            duration: '35 min',
+            description: 'Build reusable templates so you can design fast, every week.',
+            video_url: '',
+            resources: ['Template Starter Pack'],
+            assignment: 'Build a reusable weekly content template.'
+          }
+        ],
+        assignment: 'Create a mini brand kit plus 5 branded posts for a business.'
+      },
+      {
+        week: 3,
+        title: 'Client-Ready Design Skills',
+        theme: 'Getting Paid to Design',
+        color: '#34d399',
+        lessons: [
+          {
+            id: 'gd-3-1',
+            title: 'Working With a Client Brief',
+            duration: '35 min',
+            description: 'Turn a client\u2019s vague request into a clear design.',
+            video_url: '',
+            resources: ['Client Brief Template'],
+            assignment: 'Fill out a brief for a sample client request.'
+          },
+          {
+            id: 'gd-3-2',
+            title: 'Exporting & Delivering Files',
+            duration: '25 min',
+            description: 'Get files sized and formatted the way clients expect.',
+            video_url: '',
+            resources: ['Export Settings Cheat Sheet'],
+            assignment: 'Export one design in 3 different formats/sizes.'
+          },
+          {
+            id: 'gd-3-3',
+            title: 'Building a Design Portfolio',
+            duration: '35 min',
+            description: 'Put your best work in one place people can find.',
+            video_url: '',
+            resources: ['Portfolio Layout Ideas'],
+            assignment: 'Publish a portfolio page or Instagram grid of your work.'
+          }
+        ],
+        assignment: 'Complete one real design brief and publish a portfolio.'
+      }
+    ]
+  },
+  {
+    id: 'data-analysis',
+    title: 'Data Analysis',
+    category: 'Data',
+    instructor: 'Kingshima Lead',
+    duration: '3 Weeks',
+    imageUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71',
+    description: 'Learn to clean, analyse, and visualise real data using Excel/Google Sheets and beginner-friendly tools.',
+    curriculum: [
+      {
+        week: 1,
+        title: 'Data Foundations',
+        theme: 'Getting Your Data Ready',
         color: '#ff6d40',
         lessons: [
           {
             id: 'da-1-1',
-            title: 'Figma Basics & Tools',
-            duration: '45 min',
-            description: 'Get familiar with Figma workspace, frames, vector shapes, and groups.',
+            title: 'What Data Analysis Actually Is',
+            duration: '30 min',
+            description: 'A plain-language look at what analysts really do day to day.',
             video_url: '',
-            resources: ['Figma Keyboard Shortcuts PDF'],
-            assignment: 'Create a set of custom vector icons in Figma.'
+            resources: ['Intro Overview PDF'],
+            assignment: 'Write down 3 questions data could answer in your daily life.'
           },
           {
             id: 'da-1-2',
-            title: 'Typography & Visual Hierarchy',
-            duration: '60 min',
-            description: 'Understand font scaling, leading, tracking, and setting hierarchical balance.',
+            title: 'Cleaning Messy Data',
+            duration: '45 min',
+            description: 'Fix errors, blanks, and duplicates before you analyse anything.',
             video_url: '',
-            resources: ['Type Scale Guide'],
-            assignment: 'Design a clean text-focused newsletter mockup.'
+            resources: ['Data Cleaning Checklist'],
+            assignment: 'Clean a sample messy spreadsheet.'
           },
           {
             id: 'da-1-3',
-            title: 'Color Theory & UI Application',
-            duration: '50 min',
-            description: 'Create functional palettes with dark/light mode accents.',
+            title: 'Sorting & Filtering in Sheets',
+            duration: '35 min',
+            description: 'Quickly find what matters in a large dataset.',
             video_url: '',
-            resources: ['Functional Palette Builder'],
-            assignment: 'Apply color palettes to a banking app screen mockup.'
+            resources: ['Sheets Shortcuts Sheet'],
+            assignment: 'Sort and filter a dataset to answer 3 questions.'
           }
         ],
-        assignment: 'Build a low-fidelity landing page wireframe in Figma.'
+        assignment: 'Take a messy dataset from raw to clean.'
       },
       {
         week: 2,
-        title: 'UI Components & Styling',
-        theme: 'Designing UI Components',
+        title: 'Analysing & Visualising',
+        theme: 'Turning Numbers Into Answers',
         color: '#a78bfa',
         lessons: [
           {
             id: 'da-2-1',
-            title: 'Auto Layout Essentials',
-            duration: '55 min',
-            description: 'Master auto-layout rules to build responsive containers.',
+            title: 'Formulas & Pivot Tables',
+            duration: '50 min',
+            description: 'Summarise big datasets in a few clicks.',
             video_url: '',
-            resources: ['Auto Layout Sandbox File'],
-            assignment: 'Design a responsive profile card and navigation menu.'
+            resources: ['Pivot Table Guide'],
+            assignment: 'Build a pivot table summary of a sample dataset.'
           },
           {
             id: 'da-2-2',
-            title: 'Figma Components & Variants',
-            duration: '60 min',
-            description: 'Learn component properties, states, and variable variants.',
+            title: 'Charts That Tell a Story',
+            duration: '40 min',
+            description: 'Pick the right chart so your numbers are easy to understand.',
             video_url: '',
-            resources: ['Component Design Guidelines'],
-            assignment: 'Create a reusable interactive button component library.'
+            resources: ['Chart Type Cheat Sheet'],
+            assignment: 'Turn one dataset into 2 clear charts.'
           },
           {
             id: 'da-2-3',
-            title: 'Grid Systems & Constraints',
-            duration: '45 min',
-            description: 'Utilize layouts and constraints to ensure absolute responsive consistency.',
+            title: 'Intro to Simple Dashboards',
+            duration: '40 min',
+            description: 'Bring your charts and numbers onto one clean page.',
             video_url: '',
-            resources: ['Grid Layout Guide'],
-            assignment: 'Position elements correctly across Desktop and Mobile grid templates.'
+            resources: ['Dashboard Layout Template'],
+            assignment: 'Lay out a one-page dashboard draft.'
           }
         ],
-        assignment: 'Design a high-fidelity responsive dashboard screen layout.'
+        assignment: 'Build a one-page dashboard from a real dataset.'
       },
       {
         week: 3,
-        title: 'Interactions & Prototyping',
-        theme: 'Creating Interactive Prototypes',
+        title: 'Real-World Insights',
+        theme: 'Analysing Like a Professional',
         color: '#34d399',
         lessons: [
           {
             id: 'da-3-1',
-            title: 'Interactive Prototyping Basics',
-            duration: '60 min',
-            description: 'Connect screens, configure overlays, and trigger click events.',
+            title: 'Asking the Right Questions',
+            duration: '30 min',
+            description: 'Good analysis starts with a sharp question, not a spreadsheet.',
             video_url: '',
-            resources: ['Prototyping Framework PDF'],
-            assignment: 'Wire up a simple three-screen user flow.'
+            resources: ['Question Framing Guide'],
+            assignment: 'Write 3 sharp questions for a dataset of your choice.'
           },
           {
             id: 'da-3-2',
-            title: 'Smart Animate & Transitions',
-            duration: '50 min',
-            description: 'Create ultra-smooth animations, slide transitions, and micro-interactions.',
+            title: 'Using AI to Speed Up Analysis',
+            duration: '35 min',
+            description: 'Use tools like ChatGPT to explore data and check your thinking faster.',
             video_url: '',
-            resources: ['Smart Animate Cheat Sheet'],
-            assignment: 'Build an animated mobile app menu transition.'
+            resources: ['AI Prompting for Data'],
+            assignment: 'Use an AI tool to help summarise a dataset.'
           },
           {
             id: 'da-3-3',
-            title: 'Usability Testing Prototypes',
-            duration: '45 min',
-            description: 'Set up flows, run click tests, and record feedback loops.',
-            video_url: '',
-            resources: ['User Testing Sheets'],
-            assignment: 'Perform a testing session on your prototype with another classmate.'
-          }
-        ],
-        assignment: 'Deliver a fully animated mobile user flow prototype.'
-      },
-      {
-        week: 4,
-        title: 'Creative Branding Portfolio',
-        theme: 'Developing Design Portfolios',
-        color: '#fbbf24',
-        lessons: [
-          {
-            id: 'da-4-1',
-            title: 'Brand Identity Systems',
-            duration: '55 min',
-            description: 'Define logos, typography guidelines, and brand color guides.',
-            video_url: '',
-            resources: ['Brand System Guide'],
-            assignment: 'Create a visual style sheet for a mockup tech startup.'
-          },
-          {
-            id: 'da-4-2',
-            title: 'Building Design Presentations',
-            duration: '60 min',
-            description: 'Present user problem research, visual solutions, and design choices.',
+            title: 'Presenting Findings Simply',
+            duration: '35 min',
+            description: 'Explain what you found in plain language anyone can follow.',
             video_url: '',
             resources: ['Presentation Template'],
-            assignment: 'Build a slide deck presenting your mobile user flow designs.'
-          },
-          {
-            id: 'da-4-3',
-            title: 'Exporting & Design Handoff',
-            duration: '50 min',
-            description: 'Prepare assets, export layers, and set up developer handoff modes.',
-            video_url: '',
-            resources: ['Handoff Checklist'],
-            assignment: 'Export and organize all design assets for developer handoff.'
+            assignment: 'Write up 3 key findings in plain English.'
           }
         ],
-        assignment: 'Present your completed portfolio project case study.'
+        assignment: 'Analyse a dataset of your choice and present 3 key insights.'
       }
     ]
   },
   {
-    id: 'biblical-leadership',
-    title: 'Biblical Leadership',
-    category: 'Leadership',
-    instructor: 'Pastor David',
-    duration: '4 Weeks',
-    price: 99,
-    imageUrl: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c',
-    description: 'Developing character, ethical strategy, and strong teams based on Kingdom leadership principles.',
-    curriculum: [
-      {
-        week: 1,
-        title: 'Foundations of Leadership',
-        theme: 'Principles of Servant Leadership',
-        color: '#ff6d40',
-        lessons: [
-          {
-            id: 'bl-1-1',
-            title: 'Biblical Definition of Leadership',
-            duration: '45 min',
-            description: 'Contrast secular and biblical views of status, influence, and leadership authority.',
-            video_url: '',
-            resources: ['Leadership Foundations PDF'],
-            assignment: 'Write a reflection journal on leading vs serving in your current context.'
-          },
-          {
-            id: 'bl-1-2',
-            title: 'Integrity & Character Building',
-            duration: '60 min',
-            description: 'Examine key biblical figures whose character determined their leadership legacy.',
-            video_url: '',
-            resources: ['Character Dev Guide'],
-            assignment: 'Identify 3 personal integrity habits to practice this week.'
-          },
-          {
-            id: 'bl-1-3',
-            title: 'Humility in Practice',
-            duration: '50 min',
-            description: 'How humility creates influence and supports team growth.',
-            video_url: '',
-            resources: ['Humility Framework'],
-            assignment: 'Perform an act of service within your team and journal the outcomes.'
-          }
-        ],
-        assignment: 'Draft a personal leadership covenant expressing your core values.'
-      },
-      {
-        week: 2,
-        title: 'Vision & Strategy',
-        theme: 'Discerning and Mapping Vision',
-        color: '#a78bfa',
-        lessons: [
-          {
-            id: 'bl-2-1',
-            title: 'Discerning God\'s Vision',
-            duration: '55 min',
-            description: 'Learn biblical discernment techniques to define high-impact projects.',
-            video_url: '',
-            resources: ['Vision Discernment Handout'],
-            assignment: 'Draft a three-sentence mission statement for your core project.'
-          },
-          {
-            id: 'bl-2-2',
-            title: 'Strategic Mapping & Goal Setting',
-            duration: '60 min',
-            description: 'Convert abstract visions into structured goals with timeline checkpoints.',
-            video_url: '',
-            resources: ['Strategic Goal Sheet'],
-            assignment: 'Map a 30-60-90 day execution plan for your current project.'
-          },
-          {
-            id: 'bl-2-3',
-            title: 'Overcoming Obstacles',
-            duration: '45 min',
-            description: 'How biblical leaders handled crises, criticisms, and systemic blockers.',
-            video_url: '',
-            resources: ['Crisis Resolution PDF'],
-            assignment: 'Analyze a past crisis and list lessons for strategic resilience.'
-          }
-        ],
-        assignment: 'Publish a complete 6-month strategic vision and timeline briefing.'
-      },
-      {
-        week: 3,
-        title: 'Team Building & Mentorship',
-        theme: 'Developing Strong Teams',
-        color: '#34d399',
-        lessons: [
-          {
-            id: 'bl-3-1',
-            title: 'Mentorship & Discipleship Model',
-            duration: '60 min',
-            description: 'Study the coaching frameworks utilized to grow other leaders.',
-            video_url: '',
-            resources: ['Mentoring Worksheet'],
-            assignment: 'Schedule and outline a mentoring session with a peer.'
-          },
-          {
-            id: 'bl-3-2',
-            title: 'Conflict Resolution',
-            duration: '50 min',
-            description: 'Reconcile disputes using the Matthew 18 restorative methodology.',
-            video_url: '',
-            resources: ['Matthew 18 Restorative Guide'],
-            assignment: 'Roleplay a conflict resolution scenario and log key learnings.'
-          },
-          {
-            id: 'bl-3-3',
-            title: 'Building Inclusive Cohorts',
-            duration: '45 min',
-            description: 'Cultivating shared responsibility and honoring unique talent strengths.',
-            video_url: '',
-            resources: ['Strengths Finder Outline'],
-            assignment: 'Map the strengths of 3 team members and assign matching project roles.'
-          }
-        ],
-        assignment: 'Design a cohort-wide collaboration charter defining feedback rules.'
-      },
-      {
-        week: 4,
-        title: 'Strategic Kingdom Impact',
-        theme: 'Leading with Stewardship',
-        color: '#fbbf24',
-        lessons: [
-          {
-            id: 'bl-4-1',
-            title: 'Stewardship of Resources',
-            duration: '55 min',
-            description: 'Manage time, talents, and financial resources with maximum accountability.',
-            video_url: '',
-            resources: ['Stewardship Matrix PDF'],
-            assignment: 'Audit your weekly time allocation and highlight adjustment areas.'
-          },
-          {
-            id: 'bl-4-2',
-            title: 'Leading with Influence',
-            duration: '60 min',
-            description: 'Develop public speaking, writing, and networking presence.',
-            video_url: '',
-            resources: ['Communication Blueprint'],
-            assignment: 'Draft a short video address detailing your project purpose.'
-          },
-          {
-            id: 'bl-4-3',
-            title: 'Mentoring Next Gen Leaders',
-            duration: '50 min',
-            description: 'Creating structures that secure future sustainability.',
-            video_url: '',
-            resources: ['Succession Plan Checklist'],
-            assignment: 'Write a draft transition and handoff plan for your leadership role.'
-          }
-        ],
-        assignment: 'Deliver your graduation Capstone Leadership Presentation.'
-      }
-    ]
-  },
-  {
-    id: 'ai-bootcamp',
-    title: 'AI Productivity Bootcamp',
-    category: 'Engineering',
+    id: 'ai-automations',
+    title: 'AI Automations',
+    category: 'AI',
     instructor: 'Kingshima Lead',
-    duration: '4 Weeks',
-    price: 129,
+    duration: '3 Weeks',
     imageUrl: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e',
-    description: 'A 4-week intensive bootcamp for creators, professionals, and learners to leverage AI for maximum output.',
+    description: 'Use ChatGPT, Claude, and AI visual tools like Flow to automate real tasks and create content faster.',
     curriculum: [
       {
         week: 1,
-        title: 'Foundations',
-        theme: 'Building Your AI Base',
+        title: 'Talking to AI the Right Way',
+        theme: 'Prompt Engineering Basics',
         color: '#ff6d40',
         lessons: [
           {
-            id: '1-1',
-            title: 'Introduction to AI & Its Role in Productivity',
-            duration: '45 min',
-            description: 'Understand what AI tools exist today and how they fit into your workflow.',
+            id: 'ai-1-1',
+            title: 'Prompt Engineering Basics',
+            duration: '40 min',
+            description: 'Learn how to ask AI for what you actually want, clearly.',
             video_url: '',
-            resources: ['AI Tools Overview PDF', 'Starter Checklist'],
-            assignment: 'List 5 tasks in your life that could be automated or improved with AI.'
+            resources: ['Prompt Templates Pack'],
+            assignment: 'Write and test 5 prompts for tasks you do weekly.'
           },
           {
-            id: '1-2',
-            title: 'Prompt Engineering Fundamentals',
-            duration: '60 min',
-            description: 'Learn how to communicate clearly with AI models to get powerful results.',
+            id: 'ai-1-2',
+            title: 'ChatGPT vs Claude — When to Use Which',
+            duration: '35 min',
+            description: 'A practical comparison so you know which tool to reach for.',
             video_url: '',
-            resources: ['Prompt Templates Pack', 'Cheat Sheet'],
-            assignment: 'Write 10 prompts for your most common daily tasks and test them.'
+            resources: ['Tool Comparison Sheet'],
+            assignment: 'Run the same task through both tools and compare results.'
           },
           {
-            id: '1-3',
-            title: 'Setting Up Your AI-Powered Workflow',
-            duration: '50 min',
-            description: 'Build your personal AI toolkit and daily system.',
+            id: 'ai-1-3',
+            title: 'Everyday AI Use Cases',
+            duration: '30 min',
+            description: 'Simple, real ways to use AI at work, school, or business.',
             video_url: '',
-            resources: ['Workflow Template', 'Tool Comparison Guide'],
-            assignment: 'Design your weekly AI workflow and share it in the community.'
+            resources: ['Use Case Checklist'],
+            assignment: 'List 5 tasks in your life AI could take off your plate.'
           }
         ],
-        assignment: 'Map your current productivity workflow and identify 3 areas AI can improve.'
+        assignment: 'Write 10 working prompts for real tasks you do weekly.'
       },
       {
         week: 2,
-        title: 'Creativity',
-        theme: 'AI as Your Creative Partner',
+        title: 'AI for Visuals & Content',
+        theme: 'Creating Faster With AI',
         color: '#a78bfa',
         lessons: [
           {
-            id: '2-1',
-            title: 'AI for Content Creation',
-            duration: '55 min',
-            description: 'Generate, edit, and publish content 10x faster with AI assistance.',
-            video_url: '',
-            resources: ['Content Templates', 'Platform Guide'],
-            assignment: 'Create 3 pieces of content using AI tools and post one publicly.'
-          },
-          {
-            id: '2-2',
-            title: 'Visual Design with AI',
-            duration: '60 min',
-            description: 'Use AI image and design tools to produce professional visuals.',
-            video_url: '',
-            resources: ['Design Tool Comparison', 'Prompt Library for Visuals'],
-            assignment: 'Design a social media graphic set using at least one AI design tool.'
-          },
-          {
-            id: '2-3',
-            title: 'Building a Creative System',
+            id: 'ai-2-1',
+            title: 'AI Image & Video Generation',
             duration: '45 min',
-            description: 'Create repeatable creative systems that leverage AI at every step.',
+            description: 'Generate visuals and short video clips using tools like Flow.',
             video_url: '',
-            resources: ['Creative System Template', 'Automation Map'],
-            assignment: 'Document your creative system and identify automation opportunities.'
+            resources: ['Visual Prompt Library'],
+            assignment: 'Generate 5 visuals for a real project or idea.'
+          },
+          {
+            id: 'ai-2-2',
+            title: 'Turning Ideas Into Content',
+            duration: '35 min',
+            description: 'Go from a rough idea to a finished post, caption, or design.',
+            video_url: '',
+            resources: ['Idea-to-Content Framework'],
+            assignment: 'Turn one idea into a finished piece of content.'
+          },
+          {
+            id: 'ai-2-3',
+            title: 'Batch-Creating Content With AI',
+            duration: '35 min',
+            description: 'Create a week\u2019s worth of content in one sitting.',
+            video_url: '',
+            resources: ['Batch Content Template'],
+            assignment: 'Batch-create 5 pieces of content in one session.'
           }
         ],
-        assignment: 'Build a mini content campaign using only AI-assisted tools.'
+        assignment: 'Create a 5-piece content set using AI visual tools.'
       },
       {
         week: 3,
-        title: 'Productivity',
-        theme: 'Automating the Boring Stuff',
+        title: 'Automating Your Work',
+        theme: 'Making AI Do the Repetitive Stuff',
         color: '#34d399',
         lessons: [
           {
-            id: '3-1',
-            title: 'Task Automation with AI',
-            duration: '60 min',
-            description: 'Automate repetitive tasks using AI-powered tools and workflows.',
+            id: 'ai-3-1',
+            title: 'Simple Workflow Automations',
+            duration: '40 min',
+            description: 'Automate one repetitive task step by step.',
             video_url: '',
-            resources: ['Automation Blueprint', 'Tool Setup Guide'],
-            assignment: 'Identify and automate one recurring task in your workflow.'
+            resources: ['Automation Starter Guide'],
+            assignment: 'Automate one small recurring task.'
           },
           {
-            id: '3-2',
-            title: 'AI for Research & Learning',
-            duration: '50 min',
-            description: 'Use AI to learn faster, research deeper, and retain more.',
+            id: 'ai-3-2',
+            title: 'Connecting AI Tools Together',
+            duration: '35 min',
+            description: 'Chain tools together so work moves without you doing it manually.',
             video_url: '',
-            resources: ['Research Framework', 'Note-Taking Templates'],
-            assignment: 'Research a topic of your choice using only AI tools and present findings.'
+            resources: ['Tool-Chaining Examples'],
+            assignment: 'Connect 2 tools to remove one manual step from your workflow.'
           },
           {
-            id: '3-3',
-            title: 'Time Management with AI',
-            duration: '45 min',
-            description: 'Let AI help you plan, prioritize, and protect your time.',
+            id: 'ai-3-3',
+            title: 'Shipping an Automated Project',
+            duration: '35 min',
+            description: 'Package your automation so it actually gets used.',
             video_url: '',
-            resources: ['Time Blocking Template', 'Priority Matrix'],
-            assignment: 'Build a 2-week AI-assisted schedule and follow it for 3 days.'
+            resources: ['Launch Checklist'],
+            assignment: 'Document and share your finished automation.'
           }
         ],
-        assignment: 'Cut your weekly task time by 20% using automation and AI tools.'
-      },
-      {
-        week: 4,
-        title: 'Execution',
-        theme: 'Shipping Your AI-Powered Project',
-        color: '#fbbf24',
-        lessons: [
-          {
-            id: '4-1',
-            title: 'Project Planning with AI',
-            duration: '55 min',
-            description: 'Plan and scope a real project using AI for research and structure.',
-            video_url: '',
-            resources: ['Project Brief Template', 'AI Planning Prompts'],
-            assignment: 'Define your capstone project scope using the AI planning framework.'
-          },
-          {
-            id: '4-2',
-            title: 'Execution & Iteration',
-            duration: '60 min',
-            description: 'Build, test, and iterate your project with AI feedback loops.',
-            video_url: '',
-            resources: ['Feedback Loop Guide', 'Iteration Template'],
-            assignment: 'Complete your first version and get feedback from the community.'
-          },
-          {
-            id: '4-3',
-            title: 'Presenting & Shipping Your Work',
-            duration: '50 min',
-            description: 'Present your project professionally and share it with the world.',
-            video_url: '',
-            resources: ['Presentation Framework', 'Launch Checklist'],
-            assignment: 'Publish your capstone project and share the link with the cohort.'
-          }
-        ],
-        assignment: 'Ship your AI-powered capstone project by end of week.'
+        assignment: 'Build and document one real automation that saves you time weekly.'
       }
     ]
   }
