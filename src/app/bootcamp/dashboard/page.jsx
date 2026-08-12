@@ -93,7 +93,8 @@ export default function DashboardPage() {
     setPaying(true);
 
     try {
-      const reference = `kingshima-${student.id || student.username}-${Date.now()}`;
+      const cleanId = String(student.id || student.username || 'user').replace(/[^a-zA-Z0-9_-]/g, '');
+      const reference = `ks_${cleanId}_${Date.now()}`;
 
       await payApplicationFee({
         email: student.email,

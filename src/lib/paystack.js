@@ -52,12 +52,14 @@ export async function payApplicationFee({ email, amountKobo, reference, onSucces
 
   const PaystackPop = await loadPaystackScript();
 
+  const cleanRef = String(reference || `ks_${Date.now()}`).replace(/[^a-zA-Z0-9_-]/g, '');
+
   const handler = PaystackPop.setup({
     key: publicKey,
     email,
     amount: amountKobo,
     currency: 'NGN',
-    ref: reference,
+    ref: cleanRef,
     onClose: () => {
       if (onClose) onClose();
     },

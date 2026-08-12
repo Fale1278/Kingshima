@@ -48,7 +48,8 @@ export async function POST(req) {
       );
     }
 
-    const supabaseAdmin = createClient(supabaseUrl, serviceRoleKey);
+    const cleanUrl = supabaseUrl.replace(/\/rest\/v1\/?$/i, '').replace(/\/+$/, '');
+    const supabaseAdmin = createClient(cleanUrl, serviceRoleKey);
 
     const { error: updateErr } = await supabaseAdmin
       .from('students')

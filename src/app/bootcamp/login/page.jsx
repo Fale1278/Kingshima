@@ -85,7 +85,11 @@ export default function BootcampLoginPage() {
         router.push('/bootcamp/dashboard');
       } catch (err) {
         console.error(err);
-        setError('Something went wrong. Please try again.');
+        if (err?.code === 'PGRST125') {
+          setError("Database table 'students' was not found in Supabase. Please run the SQL setup script in your Supabase SQL Editor.");
+        } else {
+          setError(err?.message || 'Something went wrong. Please try again.');
+        }
       } finally {
         setLoading(false);
       }
@@ -134,7 +138,11 @@ export default function BootcampLoginPage() {
         setForm((prev) => ({ ...prev, login_code: code }));
       } catch (err) {
         console.error(err);
-        setError('Failed to register. Please try again.');
+        if (err?.code === 'PGRST125') {
+          setError("Database table 'students' was not found in Supabase. Please run the SQL setup script in your Supabase SQL Editor.");
+        } else {
+          setError(err?.message || 'Failed to register. Please try again.');
+        }
       } finally {
         setLoading(false);
       }

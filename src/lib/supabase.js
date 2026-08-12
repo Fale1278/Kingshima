@@ -21,7 +21,8 @@ function getClient() {
     return _client;
   }
   
-  _client = createClient(supabaseUrl, supabaseKey);
+  const cleanUrl = supabaseUrl.replace(/\/rest\/v1\/?$/i, '').replace(/\/+$/, '');
+  _client = createClient(cleanUrl, supabaseKey);
   return _client;
 }
 
