@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
@@ -22,6 +22,9 @@ export default function BootcampLoginPage() {
   const [successMsg, setSuccessMsg] = useState('');
   const [registeredCode, setRegisteredCode] = useState('');
   const [loading, setLoading] = useState(false);
+  // Store the full newStudent row (with real Supabase id) so handleAutoLogin
+  // uses it instead of rebuilding from form fields (which have no id).
+  const newStudentRef = useRef(null);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -131,6 +134,12 @@ export default function BootcampLoginPage() {
 
         if (insertErr) throw insertErr;
 
+        // Store the full row (with real Supabase id) for use in handleAutoLogin.
+        newStudentRef.current = {
+          ...newStudent,
+          progress: Array.isArray(newStudent?.progress) ? newStudent.progress : [],
+        };
+
         setRegisteredCode(code);
         setSuccessMsg('Registration successful! Save the code below to log in later.');
         
@@ -151,7 +160,9 @@ export default function BootcampLoginPage() {
 
   const handleAutoLogin = () => {
     if (!registeredCode) return;
-    const student = {
+    // Prefer the full Supabase row (which contains the real id) so that
+    // the verify-payment API can match the student correctly later.
+    const student = newStudentRef.current || {
       username: form.username.trim().toLowerCase(),
       email: form.email.trim().toLowerCase(),
       login_code: registeredCode,

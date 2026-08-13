@@ -90,7 +90,11 @@ export default function DashboardPage() {
   // before unlocking access to every course.
   const handleUnlockAccess = async () => {
     setPayError('');
-    setPaying(true);
+    // NOTE: Do NOT set paying=true here. The Paystack popup is the UI while
+    // the user is entering card details. Setting paying=true now would render
+    // our "Confirming payment…" overlay on top of the Paystack iframe,
+    // effectively hiding it and making the button appear broken.
+    // We only set paying=true inside onSuccess, when we're verifying server-side.
 
     try {
       const cleanId = String(student.id || student.username || 'user').replace(/[^a-zA-Z0-9_-]/g, '');
@@ -102,6 +106,8 @@ export default function DashboardPage() {
         reference,
         onClose: () => setPaying(false),
         onSuccess: async (ref) => {
+          // Card charged — now show our overlay while we verify server-side.
+          setPaying(true);
           try {
             const res = await fetch('/api/verify-payment', {
               method: 'POST',
@@ -114,7 +120,21 @@ export default function DashboardPage() {
               throw new Error(data.error || 'Verification failed.');
             }
 
-            login({ ...student, application_paid: true });
+            // Re-fetch the full student row from Supabase so we get the
+            // authoritative application_paid=true — never trust a spread of
+            // stale local state for a security-relevant field like this.
+            const { supabase: sb } = await import('@/lib/supabase');
+            const { data: freshStudent } = await sb
+              .from('students')
+              .select('*')
+              .eq('id', student.id)
+              .maybeSingle();
+
+            login(
+              freshStudent
+                ? { ...freshStudent, progress: Array.isArray(freshStudent.progress) ? freshStudent.progress : [] }
+                : { ...student, application_paid: true }
+            );
           } catch (err) {
             console.error(err);
             setPayError(
