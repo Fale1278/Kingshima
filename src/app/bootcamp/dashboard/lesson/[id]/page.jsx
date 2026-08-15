@@ -3,8 +3,9 @@
 import { useState, useEffect, use } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Lock } from 'lucide-react';
+import { Lock, Download } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
+import { downloadText } from '@/lib/zip';
 import { useBootcampAuth } from '@/context/BootcampAuthContext';
 import { COURSES, isLessonUnlocked } from '@/data/coursesData';
 import CodePlayground from '@/components/CodePlayground';
@@ -256,7 +257,16 @@ export default function LessonPage({ params }) {
 
               {/* Notes */}
               <section className={styles.card}>
-                <h2 className={styles.cardTitle}>📝 Your Notes</h2>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <h2 className={styles.cardTitle}>📝 Your Notes</h2>
+                  <button
+                    type="button"
+                    onClick={() => downloadText(notes || 'No notes yet.', `${lesson.title.replace(/[^a-z0-9]+/gi, '-').toLowerCase()}-notes.txt`)}
+                    style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)', background: 'transparent', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 6, padding: '0.3rem 0.6rem', cursor: 'pointer' }}
+                  >
+                    <Download size={12} /> Download
+                  </button>
+                </div>
                 <textarea
                   className={styles.notesArea}
                   placeholder="Take notes as you watch the lesson…"

@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-import { RotateCcw } from 'lucide-react';
+import { RotateCcw, Download } from 'lucide-react';
+import { downloadText } from '@/lib/zip';
 
 // A tiny, dependency-free spreadsheet for practicing the Data Analysis
 // curriculum: edit cells directly, paste in real CSV data, and see column
@@ -102,6 +103,11 @@ export default function DataSandbox({ storageKey = 'sandbox' }) {
     setStatColumn(1);
   };
 
+  const handleDownloadCsv = () => {
+    const csv = rows.map((row) => row.map((cell) => (cell.includes(',') ? `"${cell}"` : cell)).join(',')).join('\n');
+    downloadText(csv, 'kingshima-data-sandbox.csv');
+  };
+
   const stats = useMemo(() => {
     if (!numericColumns[statColumn]) return null;
     const values = dataRows.map((r) => Number(r[statColumn])).filter((n) => !isNaN(n));
@@ -134,6 +140,9 @@ export default function DataSandbox({ storageKey = 'sandbox' }) {
             {showCsvInput ? 'Cancel' : 'Paste CSV'}
           </button>
           <button type="button" onClick={addRow} style={toolbarBtnStyle}>+ Row</button>
+          <button type="button" onClick={handleDownloadCsv} style={toolbarBtnStyle}>
+            <Download size={12} /> CSV
+          </button>
           <button type="button" onClick={handleReset} style={toolbarBtnStyle}>
             <RotateCcw size={12} /> Reset
           </button>
