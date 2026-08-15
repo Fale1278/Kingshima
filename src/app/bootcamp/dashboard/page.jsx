@@ -9,7 +9,7 @@ import {
   LogOut, Menu, PlayCircle, BookOpen, Clock, ChevronDown
 } from 'lucide-react';
 import { useBootcampAuth } from '@/context/BootcampAuthContext';
-import { COURSES } from '@/data/coursesData';
+import { COURSES, isLessonUnlocked } from '@/data/coursesData';
 import { APPLICATION_FEE_NGN, APPLICATION_FEE_KOBO } from '@/data/accessConfig';
 import { payApplicationFee } from '@/lib/paystack';
 import styles from './page.module.css';
@@ -90,15 +90,10 @@ export default function DashboardPage() {
   // before unlocking access to every course.
   const handleUnlockAccess = async () => {
     setPayError('');
-    // NOTE: Do NOT set paying=true here. The Paystack popup is the UI while
-    // the user is entering card details. Setting paying=true now would render
-    // our "Confirming payment…" overlay on top of the Paystack iframe,
-    // effectively hiding it and making the button appear broken.
-    // We only set paying=true inside onSuccess, when we're verifying server-side.
+    setPaying(true);
 
     try {
-      const cleanId = String(student.id || student.username || 'user').replace(/[^a-zA-Z0-9_-]/g, '');
-      const reference = `ks_${cleanId}_${Date.now()}`;
+      const reference = `kingshima-${student.id || student.username}-${Date.now()}`;
 
       await payApplicationFee({
         email: student.email,
@@ -106,8 +101,6 @@ export default function DashboardPage() {
         reference,
         onClose: () => setPaying(false),
         onSuccess: async (ref) => {
-          // Card charged — now show our overlay while we verify server-side.
-          setPaying(true);
           try {
             const res = await fetch('/api/verify-payment', {
               method: 'POST',
@@ -120,21 +113,7 @@ export default function DashboardPage() {
               throw new Error(data.error || 'Verification failed.');
             }
 
-            // Re-fetch the full student row from Supabase so we get the
-            // authoritative application_paid=true — never trust a spread of
-            // stale local state for a security-relevant field like this.
-            const { supabase: sb } = await import('@/lib/supabase');
-            const { data: freshStudent } = await sb
-              .from('students')
-              .select('*')
-              .eq('id', student.id)
-              .maybeSingle();
-
-            login(
-              freshStudent
-                ? { ...freshStudent, progress: Array.isArray(freshStudent.progress) ? freshStudent.progress : [] }
-                : { ...student, application_paid: true }
-            );
+            login({ ...student, application_paid: true });
           } catch (err) {
             console.error(err);
             setPayError(
@@ -238,6 +217,21 @@ export default function DashboardPage() {
                       <ul className={styles.lessonNav}>
                         {week.lessons.map((lesson) => {
                           const done = progress.includes(lesson.id);
+                          const unlocked = done || isLessonUnlocked(activeCourse, lesson.id, progress);
+                          if (!unlocked) {
+                            return (
+                              <li key={lesson.id}>
+                                <span
+                                  className={styles.lessonNavLink}
+                                  style={{ opacity: 0.45, cursor: 'not-allowed' }}
+                                  title="Complete the previous lesson to unlock"
+                                >
+                                  <Lock className={styles.lessonIcon} size={14} />
+                                  {lesson.title}
+                                </span>
+                              </li>
+                            );
+                          }
                           return (
                             <li key={lesson.id}>
                               <Link
@@ -524,6 +518,21 @@ export default function DashboardPage() {
                             <ul className={styles.weekLessonList}>
                               {week.lessons.map((lesson) => {
                                 const lessonDone = progress.includes(lesson.id);
+                                const lessonUnlocked = lessonDone || isLessonUnlocked(activeCourse, lesson.id, progress);
+                                if (!lessonUnlocked) {
+                                  return (
+                                    <li key={lesson.id}>
+                                      <span
+                                        className={styles.lessonLink}
+                                        style={{ opacity: 0.45, cursor: 'not-allowed' }}
+                                        title="Complete the previous lesson to unlock"
+                                      >
+                                        <Lock className={styles.lessonCheckIcon} />
+                                        {lesson.title}
+                                      </span>
+                                    </li>
+                                  );
+                                }
                                 return (
                                   <li key={lesson.id}>
                                     <Link

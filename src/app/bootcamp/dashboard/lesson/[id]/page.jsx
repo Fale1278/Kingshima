@@ -3,9 +3,13 @@
 import { useState, useEffect, use } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { Lock } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { useBootcampAuth } from '@/context/BootcampAuthContext';
-import { COURSES } from '@/data/coursesData';
+import { COURSES, isLessonUnlocked } from '@/data/coursesData';
+import CodePlayground from '@/components/CodePlayground';
+import DataSandbox from '@/components/DataSandbox';
+import PromptLab from '@/components/PromptLab';
 import styles from './page.module.css';
 
 // ─── Build a flat list of all lessons from every course ──────────────────────
@@ -100,6 +104,21 @@ export default function LessonPage({ params }) {
 
   const progress    = student.progress || [];
   const isCompleted = progress.includes(lesson.id);
+  const course      = COURSES.find((c) => c.id === lesson.courseId);
+  const unlocked    = course ? isLessonUnlocked(course, lesson.id, progress) : true;
+
+  if (!unlocked) {
+    return (
+      <div className={styles.notFound}>
+        <Lock size={32} style={{ marginBottom: '0.75rem', opacity: 0.7 }} />
+        <h1>This lesson is locked</h1>
+        <p style={{ color: 'var(--text-secondary)', marginTop: '0.5rem', maxWidth: 360, textAlign: 'center' }}>
+          Finish and submit the previous lesson&apos;s assignment to unlock this one automatically.
+        </p>
+        <Link href="/bootcamp/dashboard" className={styles.backLink}>← Back to Dashboard</Link>
+      </div>
+    );
+  }
 
   // Next lesson within the same course
   const courseLessons = ALL_LESSONS.filter((l) => l.courseId === lesson.courseId);
@@ -108,12 +127,16 @@ export default function LessonPage({ params }) {
 
   const videoUrl  = dbLesson?.video_url  || lesson.video_url  || '';
   const resources = dbLesson?.resources  || lesson.resources  || [];
+  const isWebDev       = lesson.courseId === 'web-dev';
+  const isDataAnalysis = lesson.courseId === 'data-analysis';
+  const isAiAutomations = lesson.courseId === 'ai-automations';
 
-  const handleMarkComplete = async () => {
-    if (isCompleted) return;
-    setCompleting(true);
+  // Shared "mark this lesson done" logic — called by the manual button AND
+  // automatically once an assignment is submitted successfully, since that's
+  // what actually unlocks the next lesson in the sequence.
+  const persistComplete = async () => {
+    if (progress.includes(lesson.id)) return;
     markComplete(lesson.id);
-    // Persist progress to Supabase
     try {
       const newProgress = [...(student.progress || []), lesson.id];
       await supabase
@@ -121,6 +144,12 @@ export default function LessonPage({ params }) {
         .update({ progress: newProgress })
         .eq('id', student.id);
     } catch { /* non-blocking */ }
+  };
+
+  const handleMarkComplete = async () => {
+    if (isCompleted) return;
+    setCompleting(true);
+    await persistComplete();
     setCompleting(false);
   };
 
@@ -159,6 +188,13 @@ export default function LessonPage({ params }) {
       setSubmissionText('');
       setDocLink('');
       setFile(null);
+
+      // Submitting the assignment IS what completes the lesson and advances
+      // the student — this is the automated part of the learning flow.
+      await persistComplete();
+      setTimeout(() => {
+        router.push(nextLesson ? `/bootcamp/dashboard/lesson/${nextLesson.id}` : '/bootcamp/dashboard');
+      }, 1800);
     } catch {
       setSubmitStatus('error');
     } finally {
@@ -255,6 +291,15 @@ export default function LessonPage({ params }) {
               <section className={styles.card}>
                 <h2 className={styles.cardTitle}>📋 Assignment</h2>
                 <p className={styles.assignmentText}>{lesson.assignment}</p>
+                {isWebDev && (
+                  <CodePlayground storageKey={`playground_${student.id}_${lesson.id}`} />
+                )}
+                {isDataAnalysis && (
+                  <DataSandbox storageKey={`sandbox_${student.id}_${lesson.id}`} />
+                )}
+                {isAiAutomations && (
+                  <PromptLab storageKey={`promptlab_${student.id}_${lesson.id}`} task={lesson.assignment} />
+                )}
               </section>
 
               {/* Submission */}
@@ -299,7 +344,9 @@ export default function LessonPage({ params }) {
                   </div>
 
                   {submitStatus === 'success' && (
-                    <div className={styles.successBox}>✓ Submission received!</div>
+                    <div className={styles.successBox}>
+                      ✓ Submission received! {nextLesson ? 'Unlocking the next lesson…' : 'Course complete — heading back to your dashboard…'}
+                    </div>
                   )}
                   {submitStatus === 'error' && (
                     <div className={styles.errorBox}>Please add text, a link, or a file before submitting.</div>

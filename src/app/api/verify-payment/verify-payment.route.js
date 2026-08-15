@@ -16,7 +16,11 @@ export async function POST(req) {
     const { reference, studentId } = await req.json();
 
     if (!reference || !studentId) {
-      return NextResponse.json({ error: 'Missing reference or studentId.' }, { status: 400 });
+      console.error('verify-payment: missing data', { reference, studentId });
+      return NextResponse.json(
+        { error: 'Missing payment reference or student ID — your session may be out of date. Please log out and log back in, then try again.' },
+        { status: 400 }
+      );
     }
 
     const paystackSecret = process.env.PAYSTACK_SECRET_KEY;
@@ -56,7 +60,8 @@ export async function POST(req) {
         application_paid: true,
         application_fee_ref: reference,
       })
-      .eq('id', studentId);
+      .eq('id', studentId)
+      .select();
 
     if (updateErr) throw updateErr;
 

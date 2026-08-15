@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
@@ -21,10 +21,8 @@ export default function BootcampLoginPage() {
   const [error, setError] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
   const [registeredCode, setRegisteredCode] = useState('');
+  const [registeredId, setRegisteredId] = useState(null);
   const [loading, setLoading] = useState(false);
-  // Store the full newStudent row (with real Supabase id) so handleAutoLogin
-  // uses it instead of rebuilding from form fields (which have no id).
-  const newStudentRef = useRef(null);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -88,11 +86,7 @@ export default function BootcampLoginPage() {
         router.push('/bootcamp/dashboard');
       } catch (err) {
         console.error(err);
-        if (err?.code === 'PGRST125') {
-          setError("Database table 'students' was not found in Supabase. Please run the SQL setup script in your Supabase SQL Editor.");
-        } else {
-          setError(err?.message || 'Something went wrong. Please try again.');
-        }
+        setError('Something went wrong. Please try again.');
       } finally {
         setLoading(false);
       }
@@ -134,24 +128,15 @@ export default function BootcampLoginPage() {
 
         if (insertErr) throw insertErr;
 
-        // Store the full row (with real Supabase id) for use in handleAutoLogin.
-        newStudentRef.current = {
-          ...newStudent,
-          progress: Array.isArray(newStudent?.progress) ? newStudent.progress : [],
-        };
-
         setRegisteredCode(code);
+        setRegisteredId(newStudent.id);
         setSuccessMsg('Registration successful! Save the code below to log in later.');
         
         // Auto update the login form's login_code so they can log in easily
         setForm((prev) => ({ ...prev, login_code: code }));
       } catch (err) {
         console.error(err);
-        if (err?.code === 'PGRST125') {
-          setError("Database table 'students' was not found in Supabase. Please run the SQL setup script in your Supabase SQL Editor.");
-        } else {
-          setError(err?.message || 'Failed to register. Please try again.');
-        }
+        setError('Failed to register. Please try again.');
       } finally {
         setLoading(false);
       }
@@ -160,13 +145,13 @@ export default function BootcampLoginPage() {
 
   const handleAutoLogin = () => {
     if (!registeredCode) return;
-    // Prefer the full Supabase row (which contains the real id) so that
-    // the verify-payment API can match the student correctly later.
-    const student = newStudentRef.current || {
+    const student = {
+      id: registeredId,
       username: form.username.trim().toLowerCase(),
       email: form.email.trim().toLowerCase(),
       login_code: registeredCode,
       progress: [],
+      application_paid: false,
     };
     login(student);
     router.push('/bootcamp/dashboard');
